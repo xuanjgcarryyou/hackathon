@@ -37,4 +37,10 @@ export const api = {
 
   applyVendor: (data: VendorApplication) =>
     apiClient.post('/api/vendors/apply', data),
+
+  getVendorApplications: () =>
+    apiClient.get('/api/vendors/applications'),
+
+  reviewVendorApplication: (id: string, action: 'approve' | 'reject', note?: string) =>
+    apiClient.post(`/api/vendors/applications/${id}/review`, { action, note }),
 }

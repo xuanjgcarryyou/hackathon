@@ -17,6 +17,7 @@ export default function Navbar() {
         <Link to="/dashboard" className="hover:underline">儀表板</Link>
         <Link to="/scan" className="hover:underline">QR 回收</Link>
         <Link to="/esg" className="hover:underline">ESG 報表</Link>
+        <Link to="/vendor-applications" className="hover:underline">廠商審核</Link>
         <button onClick={logout} className="hover:underline text-green-200">登出</button>
       </div>
     </nav>
