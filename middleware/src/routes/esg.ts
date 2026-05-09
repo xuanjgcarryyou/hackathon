@@ -23,6 +23,18 @@ router.get('/packaging-types', async (_req: Request, res: Response) => {
   }
 })
 
+router.get('/esg/:reportId/export', authGuard, async (req: AuthRequest, res) => {
+  try {
+    const result = await forwardRequest('GET', `/api/esg/${req.params.reportId}/export`, undefined, {
+      Authorization: req.headers.authorization!,
+    })
+    res.setHeader('Content-Disposition', `attachment; filename="esg-report-${req.params.reportId.slice(0, 8)}.json"`)
+    res.json(result)
+  } catch (err: any) {
+    res.status(err.response?.status || 500).json(err.response?.data || { error: 'EXPORT_FAILED' })
+  }
+})
+
 router.post('/esg/generate', authGuard, async (req: AuthRequest, res) => {
   try {
     const result = await forwardRequest('POST', '/api/esg/generate', req.body, {

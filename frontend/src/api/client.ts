@@ -35,6 +35,9 @@ export const api = {
   generateESGReport: (periodStart: string, periodEnd: string) =>
     apiClient.post('/api/esg/generate', { periodStart, periodEnd }),
 
+  exportESGReport: (reportId: string) =>
+    apiClient.get(`/api/esg/${reportId}/export`, { responseType: 'blob' }),
+
   applyVendor: (data: VendorApplication) =>
     apiClient.post('/api/vendors/apply', data),
 

@@ -12,6 +12,24 @@ export default function ESGReportPage() {
   const [tab, setTab] = useState<'zh' | 'en'>('zh')
   const [generatedAt, setGeneratedAt] = useState<string | null>(null)
   const [genError, setGenError] = useState('')
+  const [exporting, setExporting] = useState(false)
+
+  async function handleExport(reportId: string) {
+    setExporting(true)
+    try {
+      const { data } = await api.exportESGReport(reportId)
+      const url = URL.createObjectURL(new Blob([data], { type: 'application/json' }))
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `esg-report-${reportId.slice(0, 8)}.json`
+      a.click()
+      URL.revokeObjectURL(url)
+    } catch {
+      // silent — user can retry
+    } finally {
+      setExporting(false)
+    }
+  }
 
   async function handleGenerate(e: React.FormEvent) {
     e.preventDefault()
@@ -79,9 +97,23 @@ export default function ESGReportPage() {
               </div>
             )}
             {generatedAt && (
-              <p className="text-xs text-gray-400 mb-4">
-                {report.isFallback ? '📋 本地公式計算' : '🤖 由 Claude AI 生成'}　·　{generatedAt}
-              </p>
+              <div className="flex items-center justify-between mb-4">
+                <p className="text-xs text-gray-400">
+                  {report.isFallback ? '📋 本地公式計算' : '🤖 由 Claude AI 生成'}　·　{generatedAt}
+                </p>
+                {report.reportId && (
+                  <button
+                    onClick={() => handleExport(report.reportId)}
+                    disabled={exporting}
+                    className="flex items-center gap-1.5 text-xs font-medium text-green-700 border border-green-300 bg-green-50 hover:bg-green-100 disabled:opacity-50 px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
+                  >
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    {exporting ? '匯出中...' : '下載 JSON 底稿'}
+                  </button>
+                )}
+              </div>
             )}
 
             {/* GHG Protocol Inventory Table */}

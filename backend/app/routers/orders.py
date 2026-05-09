@@ -24,7 +24,9 @@ class WeeklyOrderRequest(BaseModel):
 
 @router.post("/orders/weekly")
 async def create_weekly_order(body: WeeklyOrderRequest, db: AsyncSession = Depends(get_db), user: dict = Depends(get_current_user)):
-    company_id = user.get("company_id", "company-001")
+    company_id = user.get("company_id")
+    if not company_id:
+        raise HTTPException(status_code=401, detail="company_id missing from token")
 
     order = Order(
         id=str(uuid.uuid4()),
@@ -72,7 +74,9 @@ async def get_current_week_order(db: AsyncSession = Depends(get_db), user: dict 
 
     today = date.today()
     week_start = (today - timedelta(days=today.weekday())).strftime("%Y-%m-%d")
-    company_id = user.get("company_id", "company-001")
+    company_id = user.get("company_id")
+    if not company_id:
+        raise HTTPException(status_code=401, detail="company_id missing from token")
 
     result = await db.execute(
         select(Order).where(

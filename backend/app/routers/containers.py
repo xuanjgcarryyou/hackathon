@@ -86,7 +86,9 @@ async def get_my_stats(db: AsyncSession = Depends(get_db), user: dict = Depends(
     my_collected = sum(b.collected_count or 0 for b in my_batches)
     my_co2e = sum(calc_co2e_saved(b.collected_count or 0, 0.15) for b in my_batches)
 
-    company_id = user.get("company_id", "company-001")
+    company_id = user.get("company_id")
+    if not company_id:
+        raise HTTPException(status_code=401, detail="company_id missing from token")
     company_result = await db.execute(
         select(ContainerBatch).where(ContainerBatch.company_id == company_id)
     )
@@ -107,7 +109,9 @@ async def get_my_stats(db: AsyncSession = Depends(get_db), user: dict = Depends(
 
 @router.get("/containers/stats")
 async def get_stats(period: str = "week", db: AsyncSession = Depends(get_db), user: dict = Depends(get_current_user)):
-    company_id = user.get("company_id", "company-001")
+    company_id = user.get("company_id")
+    if not company_id:
+        raise HTTPException(status_code=401, detail="company_id missing from token")
 
     result = await db.execute(
         select(ContainerBatch).where(ContainerBatch.company_id == company_id)

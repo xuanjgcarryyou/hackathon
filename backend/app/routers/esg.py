@@ -94,3 +94,54 @@ async def create_esg_report(body: ESGRequest, db: AsyncSession = Depends(get_db)
         "dataHash": data_hash,
         "isFallback": is_fallback,
     }
+
+
+@router.get("/esg/{report_id}/export")
+async def export_esg_report(report_id: str, db: AsyncSession = Depends(get_db), user: dict = Depends(get_current_user)):
+    company_id = user.get("company_id")
+    if not company_id:
+        raise HTTPException(status_code=401, detail="company_id missing from token")
+
+    result = await db.execute(
+        select(ESGSummary).where(
+            ESGSummary.id == report_id,
+            ESGSummary.company_id == company_id,
+        )
+    )
+    summary = result.scalar_one_or_none()
+    if not summary:
+        raise HTTPException(status_code=404, detail="Report not found")
+
+    return_rate = summary.circular_meals / summary.total_meals if summary.total_meals > 0 else 0
+
+    payload = {
+        "schemaVersion": "1.0",
+        "framework": "GHG Protocol Scope 3 Category 1 — Avoided Emissions",
+        "reportId": summary.id,
+        "companyId": summary.company_id,
+        "period": {"start": summary.period_start, "end": summary.period_end},
+        "generatedAt": summary.generated_at.isoformat() if summary.generated_at else None,
+        "metrics": {
+            "totalMeals": summary.total_meals,
+            "circularMeals": summary.circular_meals,
+            "returnRate": round(return_rate, 4),
+            "reducedPackagingKg": round(summary.reduced_packaging_kg, 3),
+            "co2eSavedKg": round(summary.co2e_saved, 3),
+        },
+        "methodology": {
+            "carbonFactorSource": summary.carbon_factor_source,
+            "dataHash": summary.data_hash,
+            "batchIds": summary.batch_ids,
+        },
+        "reportText": {
+            "zh": summary.report_text_zh,
+            "en": summary.report_text_en,
+        },
+        "tables": summary.tables,
+    }
+
+    from fastapi.responses import JSONResponse
+    return JSONResponse(
+        content=payload,
+        headers={"Content-Disposition": f'attachment; filename="esg-report-{report_id[:8]}.json"'},
+    )
