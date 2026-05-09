@@ -50,7 +50,15 @@ async def seed():
                            supports_circular=True, price_per_meal=120)
         rest2 = Restaurant(id="rest-002", vendor_id="vendor-001", name="素食便當",
                            supports_circular=True, price_per_meal=100)
-        db.add_all([rest1, rest2])
+        rest3 = Restaurant(id="rest-003", vendor_id="vendor-001", name="覓廚定食",
+                           supports_circular=True, price_per_meal=150)
+        rest4 = Restaurant(id="rest-004", vendor_id="vendor-001", name="十八廚",
+                           supports_circular=False, price_per_meal=100)
+        rest5 = Restaurant(id="rest-005", vendor_id="vendor-001", name="Dr. Salt",
+                           supports_circular=True, price_per_meal=180)
+        rest6 = Restaurant(id="rest-006", vendor_id="vendor-001", name="純浮食代",
+                           supports_circular=True, price_per_meal=130)
+        db.add_all([rest1, rest2, rest3, rest4, rest5, rest6])
 
         hashed = pwd_context.hash("demo1234")
         db.add_all([

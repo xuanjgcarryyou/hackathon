@@ -65,6 +65,44 @@ async def get_restaurants(db: AsyncSession = Depends(get_db)):
     ]
 
 
+@router.get("/orders/current-week")
+async def get_current_week_order(db: AsyncSession = Depends(get_db), user: dict = Depends(get_current_user)):
+    from datetime import date, timedelta
+    from app.models.restaurant import Restaurant
+
+    today = date.today()
+    week_start = (today - timedelta(days=today.weekday())).strftime("%Y-%m-%d")
+    company_id = user.get("company_id", "company-001")
+
+    result = await db.execute(
+        select(Order).where(
+            Order.company_id == company_id,
+            Order.week_start == week_start,
+        )
+    )
+    orders = result.scalars().all()
+
+    if not orders:
+        return {"selected": None}
+
+    order = orders[-1]
+    rest_result = await db.execute(select(Restaurant).where(Restaurant.id == order.restaurant_id))
+    restaurant = rest_result.scalar_one_or_none()
+
+    return {
+        "selected": {
+            "orderId": order.id,
+            "restaurantId": order.restaurant_id,
+            "restaurantName": restaurant.name if restaurant else order.restaurant_id,
+            "vendorId": order.vendor_id,
+            "estimatedCount": order.estimated_count,
+            "weekStart": order.week_start,
+            "pricePerMeal": restaurant.price_per_meal if restaurant else None,
+            "supportsCircular": restaurant.supports_circular if restaurant else True,
+        }
+    }
+
+
 @router.get("/vendors")
 async def get_vendors(db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(Vendor))

@@ -15,6 +15,17 @@ router.post('/orders/weekly', authGuard, async (req: AuthRequest, res) => {
   }
 })
 
+router.get('/orders/current-week', authGuard, async (req: AuthRequest, res) => {
+  try {
+    const result = await forwardRequest('GET', '/api/orders/current-week', undefined, {
+      Authorization: req.headers.authorization!,
+    })
+    res.json(result)
+  } catch {
+    res.status(500).json({ error: 'FETCH_FAILED' })
+  }
+})
+
 router.get('/restaurants', authGuard, async (req: AuthRequest, res) => {
   try {
     const result = await forwardRequest('GET', '/api/restaurants', undefined, {

@@ -38,6 +38,9 @@ export const api = {
   applyVendor: (data: VendorApplication) =>
     apiClient.post('/api/vendors/apply', data),
 
+  getCurrentWeekOrder: () =>
+    apiClient.get('/api/orders/current-week'),
+
   getVendorApplications: () =>
     apiClient.get('/api/vendors/applications'),
 

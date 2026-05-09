@@ -22,7 +22,11 @@ export default function LoginPage() {
       wsClient.connect(data.token)
 
       const user: UserRecord = data.user
-      navigate(user.role === 'employee' ? '/order' : '/dashboard')
+      navigate(
+        user.role === 'employee' ? '/order' :
+        user.role === 'manager' ? '/company-admin' :
+        '/dashboard'
+      )
     } catch {
       setError('帳號或密碼錯誤')
     } finally {
@@ -71,8 +75,8 @@ export default function LoginPage() {
 
         <div className="mt-6 p-3 bg-gray-50 rounded-lg text-xs text-gray-500">
           <p className="font-medium mb-1">Demo 帳號</p>
-          <p>hr@demo.com / demo1234 → HR 儀表板</p>
-          <p>mgr@demo.com / demo1234 → 管理員</p>
+          <p>hr@demo.com / demo1234 → 平台管理員</p>
+          <p>mgr@demo.com / demo1234 → 公司管理員</p>
           <p>emp@demo.com / demo1234 → 員工點餐</p>
         </div>
 

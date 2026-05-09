@@ -6,6 +6,7 @@ import QRScannerPage from './pages/QRScanner/QRScannerPage'
 import ESGReportPage from './pages/ESGReport/ESGReportPage'
 import VendorPortalPage from './pages/VendorPortal/VendorPortalPage'
 import VendorApplicationsPage from './pages/VendorApplications/VendorApplicationsPage'
+import CompanyAdminPage from './pages/CompanyAdmin/CompanyAdminPage'
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const token = localStorage.getItem('token')
@@ -23,6 +24,7 @@ export default function App() {
         <Route path="/esg" element={<PrivateRoute><ESGReportPage /></PrivateRoute>} />
         <Route path="/vendor-portal" element={<VendorPortalPage />} />
         <Route path="/vendor-applications" element={<PrivateRoute><VendorApplicationsPage /></PrivateRoute>} />
+        <Route path="/company-admin" element={<PrivateRoute><CompanyAdminPage /></PrivateRoute>} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </BrowserRouter>
