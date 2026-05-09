@@ -21,7 +21,7 @@ B) 短期活動（餐會、展覽、快閃活動）`,
   gaps: `根據目前資料，以下項目需要補強才能符合完整 ESG 揭露：
 
 ⚠️ 高優先：
-• Scope 3 Category 11 以外的類別尚未涵蓋
+• Scope 3 Category 1 以外的其他類別尚未涵蓋（如 Cat.4 運輸、Cat.5 廢棄物）
 • 缺乏第三方確信報告
 
 📋 中優先：
@@ -164,24 +164,35 @@ export default function AIAgentPage() {
           <div className="bg-white rounded-xl shadow-sm p-4">
             <p className="text-xs text-gray-500 mb-2 font-semibold">計算方法</p>
             <span className="inline-flex items-center gap-1 bg-green-100 text-green-800 text-xs font-semibold px-3 py-1.5 rounded-full">
-              ✓ GHG Protocol Scope 3 Cat.11
+              ✓ GHG Protocol Scope 3 Cat.1 避免排放量
             </span>
           </div>
 
           {/* Data Gap Warnings */}
           <div className="bg-white rounded-xl shadow-sm p-4">
-            <p className="text-xs text-gray-500 mb-3 font-semibold">資料缺口提醒</p>
+            <p className="text-xs text-gray-500 mb-3 font-semibold">GHG 揭露缺口狀態</p>
             <div className="flex flex-col gap-2">
-              {[
-                'Scope 3 其他類別尚未涵蓋（Category 1, 4 等）',
-                '缺乏第三方確信機制',
-                '員工個人貢獻追蹤尚未建立',
-              ].map(warn => (
-                <div key={warn} className="bg-orange-50 border border-orange-200 rounded-lg px-3 py-2 flex items-start gap-2">
-                  <span className="text-orange-500 text-xs mt-0.5">⚠</span>
-                  <p className="text-xs text-orange-700">{warn}</p>
+              <div className="bg-orange-50 border border-orange-200 rounded-lg px-3 py-2 flex items-start gap-2">
+                <span className="text-orange-500 text-xs mt-0.5">⚠</span>
+                <div>
+                  <p className="text-xs text-orange-700 font-medium">Scope 3 Cat.4 / Cat.5 尚未追蹤</p>
+                  <p className="text-xs text-orange-500 mt-0.5">Cat.1 包材避免排放量已量測，清冊表已揭露缺口範圍</p>
                 </div>
-              ))}
+              </div>
+              <div className="bg-blue-50 border border-blue-200 rounded-lg px-3 py-2 flex items-start gap-2">
+                <span className="text-blue-500 text-xs mt-0.5">○</span>
+                <div>
+                  <p className="text-xs text-blue-700 font-medium">第三方確信機制：規劃中</p>
+                  <p className="text-xs text-blue-500 mt-0.5">SHA-256 稽核碼已建立，可供外部查驗</p>
+                </div>
+              </div>
+              <div className="bg-green-50 border border-green-200 rounded-lg px-3 py-2 flex items-start gap-2">
+                <span className="text-green-600 text-xs mt-0.5">✓</span>
+                <div>
+                  <p className="text-xs text-green-700 font-medium">員工個人貢獻追蹤：已建立</p>
+                  <p className="text-xs text-green-500 mt-0.5">掃碼頁可查看個人 CO₂e 貢獻與回收比例</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -216,7 +227,7 @@ export default function AIAgentPage() {
                   前往 ESG 報表生成頁面 →
                 </button>
                 <p className="text-xs text-gray-500 text-center max-w-xs leading-relaxed">
-                  報表將依據本週實際回收數據，由 Claude AI 自動產生 GHG Protocol Scope 3 格式的中英文報告。
+                  報表將依據本週實際回收數據，由 Claude AI 自動產生符合 GHG Protocol Scope 3 Category 1 框架的包材避免排放量中英文報告。
                 </p>
               </div>
             ) : (

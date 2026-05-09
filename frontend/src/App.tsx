@@ -9,6 +9,8 @@ import VendorApplicationsPage from './pages/VendorApplications/VendorApplication
 import CompanyAdminPage from './pages/CompanyAdmin/CompanyAdminPage'
 import VendorShowcasePage from './pages/VendorShowcase/VendorShowcasePage'
 import AIAgentPage from './pages/AIAgent/AIAgentPage'
+import ESGBIDashboardPage from './pages/ESGBIDashboard/ESGBIDashboardPage'
+import CarbonModelPage from './pages/CarbonModel/CarbonModelPage'
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const token = localStorage.getItem('token')
@@ -29,6 +31,8 @@ export default function App() {
         <Route path="/company-admin" element={<PrivateRoute><CompanyAdminPage /></PrivateRoute>} />
         <Route path="/vendor-showcase" element={<VendorShowcasePage />} />
         <Route path="/ai-agent" element={<PrivateRoute><AIAgentPage /></PrivateRoute>} />
+        <Route path="/esg-bi" element={<PrivateRoute><ESGBIDashboardPage /></PrivateRoute>} />
+        <Route path="/carbon-model" element={<PrivateRoute><CarbonModelPage /></PrivateRoute>} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </BrowserRouter>

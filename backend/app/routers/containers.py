@@ -45,7 +45,7 @@ async def dispatch_containers(body: DispatchRequest, db: AsyncSession = Depends(
 
 
 @router.post("/containers/collect")
-async def collect_containers(body: CollectRequest, db: AsyncSession = Depends(get_db), _user: dict = Depends(get_current_user)):
+async def collect_containers(body: CollectRequest, db: AsyncSession = Depends(get_db), user: dict = Depends(get_current_user)):
     result = await db.execute(select(ContainerBatch).where(ContainerBatch.id == body.batchId))
     batch = result.scalar_one_or_none()
     if not batch:
@@ -54,6 +54,7 @@ async def collect_containers(body: CollectRequest, db: AsyncSession = Depends(ge
     batch.collected_count = body.collectedCount
     batch.collected_at = datetime.utcnow()
     batch.status = "collected"
+    batch.collected_by_user_id = user.get("sub")
 
     return_rate = body.collectedCount / batch.quantity if batch.quantity > 0 else 0.0
 
@@ -69,6 +70,38 @@ async def collect_containers(body: CollectRequest, db: AsyncSession = Depends(ge
         "returnRate": round(return_rate, 4),
         "anomaly": return_rate < ANOMALY_THRESHOLD,
         "co2eSaved": round(co2e, 3),
+    }
+
+
+@router.get("/containers/my-stats")
+async def get_my_stats(db: AsyncSession = Depends(get_db), user: dict = Depends(get_current_user)):
+    user_id = user.get("sub", "")
+    result = await db.execute(
+        select(ContainerBatch).where(
+            ContainerBatch.collected_by_user_id == user_id,
+            ContainerBatch.status == "collected",
+        )
+    )
+    my_batches = result.scalars().all()
+    my_collected = sum(b.collected_count or 0 for b in my_batches)
+    my_co2e = sum(calc_co2e_saved(b.collected_count or 0, 0.15) for b in my_batches)
+
+    company_id = user.get("company_id", "company-001")
+    company_result = await db.execute(
+        select(ContainerBatch).where(ContainerBatch.company_id == company_id)
+    )
+    all_batches = company_result.scalars().all()
+    company_collected = sum(b.collected_count or 0 for b in all_batches if b.status == "collected")
+    company_co2e = sum(calc_co2e_saved(b.collected_count or 0, 0.15) for b in all_batches if b.status == "collected")
+
+    return {
+        "userId": user_id,
+        "userName": user.get("name", ""),
+        "myCollectedCount": my_collected,
+        "myCo2eSaved": round(my_co2e, 3),
+        "myScanCount": len(my_batches),
+        "companyCollectedCount": company_collected,
+        "companyCo2eSaved": round(company_co2e, 3),
     }
 
 

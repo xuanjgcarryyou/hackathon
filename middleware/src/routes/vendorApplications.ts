@@ -4,6 +4,15 @@ import { forwardRequest } from '../proxy'
 
 const router = Router()
 
+router.get('/vendors/public-esg', async (_req: Request, res: Response) => {
+  try {
+    const result = await forwardRequest('GET', '/api/vendors/public-esg')
+    res.json(result)
+  } catch (err: any) {
+    res.status(err.response?.status || 500).json(err.response?.data || { error: 'FETCH_FAILED' })
+  }
+})
+
 router.post('/vendors/apply', async (req: Request, res: Response) => {
   try {
     const result = await forwardRequest('POST', '/api/vendors/apply', req.body)

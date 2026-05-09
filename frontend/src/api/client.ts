@@ -49,4 +49,11 @@ export const api = {
 
   getPublicVendorESG: () => apiClient.get('/api/vendors/public-esg'),
   getESGCalculationMethods: () => apiClient.get('/api/esg/calculation-methods'),
+  getMyContainerStats: () => apiClient.get('/api/containers/my-stats'),
+
+  getCarbonFactors: () => apiClient.get('/api/carbon/factors'),
+  getCarbonLifecycleTree: (itemType: string) =>
+    apiClient.get(`/api/carbon/lifecycle-tree?item_type=${itemType}`),
+  carbonCompare: (data: { itemType: string; quantity: number; returnRate: number; reusableCycles: number }) =>
+    apiClient.post('/api/carbon/compare', data),
 }

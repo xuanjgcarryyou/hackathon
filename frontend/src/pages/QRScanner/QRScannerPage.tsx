@@ -1,6 +1,15 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Navbar from '../../components/Navbar'
 import { api } from '../../api/client'
+
+interface MyStats {
+  userName: string
+  myCollectedCount: number
+  myCo2eSaved: number
+  myScanCount: number
+  companyCollectedCount: number
+  companyCo2eSaved: number
+}
 
 export default function QRScannerPage() {
   const [batchId, setBatchId] = useState('')
@@ -9,6 +18,13 @@ export default function QRScannerPage() {
   const [loading, setLoading] = useState(false)
   const [dispatchLoading, setDispatchLoading] = useState(false)
   const [lastBatchId, setLastBatchId] = useState('')
+  const [myStats, setMyStats] = useState<MyStats | null>(null)
+
+  function fetchMyStats() {
+    api.getMyContainerStats().then(res => setMyStats(res.data)).catch(() => {})
+  }
+
+  useEffect(() => { fetchMyStats() }, [])
 
   async function handleSimulateDispatch() {
     setDispatchLoading(true)
@@ -37,6 +53,7 @@ export default function QRScannerPage() {
     try {
       const { data } = await api.collectContainers(batchId, count)
       setResult(data)
+      fetchMyStats()
     } catch (err: any) {
       alert(err.response?.data?.error || '回收失敗')
     } finally {
@@ -49,6 +66,40 @@ export default function QRScannerPage() {
       <Navbar />
       <div className="max-w-lg mx-auto p-6">
         <h1 className="text-2xl font-bold text-gray-800 mb-6">容器掃碼回收</h1>
+
+        {/* Personal Contribution Card */}
+        {myStats && (
+          <div className="bg-white rounded-xl shadow-sm p-5 mb-4 border-l-4 border-green-500">
+            <p className="text-xs text-gray-500 font-semibold mb-3">我的環保貢獻（GHG Scope 3 Cat.11）</p>
+            <div className="grid grid-cols-3 gap-3 mb-3">
+              <div className="text-center">
+                <p className="text-2xl font-bold text-green-700">{myStats.myScanCount}</p>
+                <p className="text-xs text-gray-500 mt-0.5">累積掃碼次數</p>
+              </div>
+              <div className="text-center">
+                <p className="text-2xl font-bold text-green-700">{myStats.myCollectedCount.toLocaleString()}</p>
+                <p className="text-xs text-gray-500 mt-0.5">回收容器總數</p>
+              </div>
+              <div className="text-center">
+                <p className="text-2xl font-bold text-green-700">{myStats.myCo2eSaved.toFixed(1)}</p>
+                <p className="text-xs text-gray-500 mt-0.5">kg CO₂e 減量</p>
+              </div>
+            </div>
+            <div>
+              <div className="flex justify-between text-xs text-gray-400 mb-1">
+                <span>個人佔公司總回收比例</span>
+                <span>{myStats.companyCollectedCount > 0 ? ((myStats.myCollectedCount / myStats.companyCollectedCount) * 100).toFixed(1) : '0.0'}%</span>
+              </div>
+              <div className="w-full bg-gray-100 rounded-full h-2">
+                <div
+                  className="bg-green-500 h-2 rounded-full"
+                  style={{ width: myStats.companyCollectedCount > 0 ? `${Math.min((myStats.myCollectedCount / myStats.companyCollectedCount) * 100, 100)}%` : '0%' }}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
 
         <div className="bg-white rounded-xl shadow-sm p-6 mb-4">
           <h2 className="font-semibold text-gray-700 mb-3">Step 1：模擬出貨（建立批次）</h2>

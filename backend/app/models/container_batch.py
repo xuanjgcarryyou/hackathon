@@ -18,3 +18,4 @@ class ContainerBatch(Base):
     collected_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
     collected_count: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
     status: Mapped[str] = mapped_column(String, default="dispatched")
+    collected_by_user_id: Mapped[Optional[str]] = mapped_column(String, nullable=True)

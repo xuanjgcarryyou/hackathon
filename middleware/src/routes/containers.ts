@@ -48,6 +48,17 @@ router.post('/containers/collect', authGuard, async (req: AuthRequest, res) => {
   }
 })
 
+router.get('/containers/my-stats', authGuard, async (req: AuthRequest, res) => {
+  try {
+    const result = await forwardRequest('GET', '/api/containers/my-stats', undefined, {
+      Authorization: req.headers.authorization!,
+    })
+    res.json(result)
+  } catch {
+    res.status(500).json({ error: 'MY_STATS_FAILED' })
+  }
+})
+
 router.get('/containers/stats', authGuard, async (req: AuthRequest, res) => {
   try {
     const qs = new URLSearchParams(req.query as Record<string, string>).toString()

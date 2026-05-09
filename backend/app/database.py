@@ -20,7 +20,7 @@ async def get_db():
 
 async def init_db():
     async with engine.begin() as conn:
-        from app.models import user, company, vendor, restaurant, order, container_batch, esg_summary, vendor_application, packaging_type, vendor_esg_profile, esg_calculation_method  # noqa
+        from app.models import user, company, vendor, restaurant, order, container_batch, esg_summary, vendor_application, packaging_type, vendor_esg_profile, esg_calculation_method, carbon  # noqa
         await conn.run_sync(Base.metadata.create_all)
         from sqlalchemy import text
         for col, coltype in [
@@ -30,4 +30,10 @@ async def init_db():
         ]:
             await conn.execute(text(
                 f"ALTER TABLE esg_summaries ADD COLUMN IF NOT EXISTS {col} {coltype}"
+            ))
+        for col, coltype in [
+            ("collected_by_user_id", "TEXT"),
+        ]:
+            await conn.execute(text(
+                f"ALTER TABLE container_batches ADD COLUMN IF NOT EXISTS {col} {coltype}"
             ))

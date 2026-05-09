@@ -69,9 +69,71 @@ export default function ESGReportPage() {
 
         {report && (
           <div className="bg-white rounded-xl shadow-sm p-6">
-            {generatedAt && (
-              <p className="text-xs text-gray-400 mb-4">🤖 由 Claude AI 生成　·　{generatedAt}</p>
+            {report.isFallback && (
+              <div className="mb-4 bg-orange-50 border border-orange-200 rounded-xl px-4 py-3 flex items-start gap-2">
+                <span className="text-orange-500 mt-0.5">⚠️</span>
+                <div>
+                  <p className="text-sm font-medium text-orange-700">本地計算模板（AI 生成服務暫時不可用）</p>
+                  <p className="text-xs text-orange-500 mt-0.5">數值由本地公式正確計算；文字格式為預設模板，非 AI 即時生成。</p>
+                </div>
+              </div>
             )}
+            {generatedAt && (
+              <p className="text-xs text-gray-400 mb-4">
+                {report.isFallback ? '📋 本地公式計算' : '🤖 由 Claude AI 生成'}　·　{generatedAt}
+              </p>
+            )}
+
+            {/* GHG Protocol Inventory Table */}
+            <div className="mb-6 border border-gray-200 rounded-xl overflow-hidden">
+              <div className="bg-green-700 text-white px-4 py-3">
+                <p className="text-sm font-bold">GHG Protocol 溫室氣體清冊</p>
+                <p className="text-xs text-green-200 mt-0.5">依 ISO 14064-1 / GHG Protocol Corporate Standard 編製</p>
+              </div>
+              <table className="w-full text-xs">
+                <thead className="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th className="text-left px-3 py-2 text-gray-500 font-semibold w-20">範疇</th>
+                    <th className="text-left px-3 py-2 text-gray-500 font-semibold w-24">類別</th>
+                    <th className="text-left px-3 py-2 text-gray-500 font-semibold">說明</th>
+                    <th className="text-right px-3 py-2 text-gray-500 font-semibold w-32">排放量 (kg CO₂e)</th>
+                    <th className="text-center px-3 py-2 text-gray-500 font-semibold w-24">狀態</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {[
+                    { scope: 'Scope 1', cat: '—', desc: '直接排放（燃料燃燒、逸散）', value: '0', status: 'na', statusLabel: '不適用' },
+                    { scope: 'Scope 2', cat: '—', desc: '電力間接排放', value: '—', status: 'untracked', statusLabel: '未追蹤' },
+                    { scope: 'Scope 3', cat: 'Cat.1', desc: '採購商品與服務－包材碳排避免量（循環容器替代一次性包材，Avoided Emissions）', value: report.co2eSaved.toFixed(2), status: 'measured', statusLabel: '✓ 已量測' },
+                    { scope: 'Scope 3', cat: 'Cat.1', desc: '採購商品與服務－食材上游完整碳排', value: '—', status: 'untracked', statusLabel: '未追蹤' },
+                    { scope: 'Scope 3', cat: 'Cat.4', desc: '上游運輸與配送', value: '—', status: 'untracked', statusLabel: '未追蹤' },
+                    { scope: 'Scope 3', cat: 'Cat.5', desc: '營運產生廢棄物', value: '—', status: 'untracked', statusLabel: '未追蹤' },
+                  ].map((row, i) => (
+                    <tr key={i} className={row.status === 'measured' ? 'bg-green-50' : ''}>
+                      <td className="px-3 py-2.5 font-semibold text-gray-700">{row.scope}</td>
+                      <td className="px-3 py-2.5 text-gray-500">{row.cat}</td>
+                      <td className="px-3 py-2.5 text-gray-600">{row.desc}</td>
+                      <td className={`px-3 py-2.5 text-right font-mono font-semibold ${row.status === 'measured' ? 'text-green-700' : 'text-gray-400'}`}>
+                        {row.value}
+                      </td>
+                      <td className="px-3 py-2.5 text-center">
+                        <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${
+                          row.status === 'measured' ? 'bg-green-100 text-green-700' :
+                          row.status === 'na' ? 'bg-gray-100 text-gray-500' :
+                          'bg-orange-50 text-orange-600'
+                        }`}>
+                          {row.statusLabel}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <div className="bg-gray-50 px-4 py-2 border-t border-gray-200">
+                <p className="text-xs text-gray-400">本報告揭露 Scope 3 Category 1 包材採購避免排放量（Avoided Emissions），為補充揭露指標，不計入 GHG 清冊排放總量。其他 Scope 3 類別尚待擴充追蹤。</p>
+              </div>
+            </div>
+
             <div className="grid grid-cols-4 gap-3 mb-6">
               {[
                 { label: '總訂餐份數', value: report.totalMeals, unit: '份' },

@@ -25,6 +25,8 @@ export default function Navbar() {
             <Link to="/esg" className="hover:underline">ESG 報表</Link>
             <Link to="/vendor-showcase" className="hover:underline">廠商生態</Link>
             <Link to="/ai-agent" className="hover:underline">AI 大使</Link>
+            <Link to="/carbon-model" className="hover:underline font-semibold text-green-100">碳模型</Link>
+            <Link to="/esg-bi" className="hover:underline font-semibold text-green-200">BI 儀表板</Link>
           </>
         )}
         {role === 'manager' && (
@@ -32,6 +34,8 @@ export default function Navbar() {
             <Link to="/company-admin" className="hover:underline">選擇餐廳</Link>
             <Link to="/esg" className="hover:underline">ESG 報表</Link>
             <Link to="/ai-agent" className="hover:underline">AI 大使</Link>
+            <Link to="/carbon-model" className="hover:underline font-semibold text-green-100">碳模型</Link>
+            <Link to="/esg-bi" className="hover:underline font-semibold text-green-200">BI 儀表板</Link>
           </>
         )}
         {role === 'employee' && (

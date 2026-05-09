@@ -49,6 +49,7 @@ export interface ESGReport {
   tables: ESGTable[]
   carbonFactorSource?: string
   dataHash?: string
+  isFallback?: boolean
 }
 
 export interface VendorApplication {

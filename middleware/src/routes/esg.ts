@@ -1,9 +1,27 @@
-import { Router } from 'express'
+import { Router, Request, Response } from 'express'
 import { authGuard, AuthRequest } from '../middleware/authGuard'
 import { forwardRequest } from '../proxy'
 import { broadcast } from '../ws/wsServer'
 
 const router = Router()
+
+router.get('/esg/calculation-methods', async (_req: Request, res: Response) => {
+  try {
+    const result = await forwardRequest('GET', '/api/esg/calculation-methods')
+    res.json(result)
+  } catch (err: any) {
+    res.status(err.response?.status || 500).json(err.response?.data || { error: 'FETCH_FAILED' })
+  }
+})
+
+router.get('/packaging-types', async (_req: Request, res: Response) => {
+  try {
+    const result = await forwardRequest('GET', '/api/packaging-types')
+    res.json(result)
+  } catch (err: any) {
+    res.status(err.response?.status || 500).json(err.response?.data || { error: 'FETCH_FAILED' })
+  }
+})
 
 router.post('/esg/generate', authGuard, async (req: AuthRequest, res) => {
   try {

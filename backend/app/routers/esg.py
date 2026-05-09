@@ -1,7 +1,7 @@
 import hashlib
 import json
 import uuid
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
@@ -25,7 +25,9 @@ class ESGRequest(BaseModel):
 
 @router.post("/esg/generate")
 async def create_esg_report(body: ESGRequest, db: AsyncSession = Depends(get_db), user: dict = Depends(get_current_user)):
-    company_id = user.get("company_id", "company-001")
+    company_id = user.get("company_id")
+    if not company_id:
+        raise HTTPException(status_code=401, detail="company_id missing from token")
 
     result = await db.execute(
         select(ContainerBatch).where(
@@ -58,7 +60,7 @@ async def create_esg_report(body: ESGRequest, db: AsyncSession = Depends(get_db)
         "carbon_factor_source": carbon_factor_source,
     }
 
-    report_text_zh, report_text_en, tables = await generate_esg_report(report_data)
+    report_text_zh, report_text_en, tables, is_fallback = await generate_esg_report(report_data)
 
     summary = ESGSummary(
         id=str(uuid.uuid4()),
@@ -90,4 +92,5 @@ async def create_esg_report(body: ESGRequest, db: AsyncSession = Depends(get_db)
         "tables": tables,
         "carbonFactorSource": carbon_factor_source,
         "dataHash": data_hash,
+        "isFallback": is_fallback,
     }

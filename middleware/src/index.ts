@@ -6,6 +6,7 @@ import ordersRouter from './routes/orders'
 import containersRouter from './routes/containers'
 import esgRouter from './routes/esg'
 import vendorApplicationsRouter from './routes/vendorApplications'
+import carbonRouter from './routes/carbon'
 import { setupWebSocket } from './ws/wsServer'
 
 const app = express()
@@ -16,6 +17,7 @@ app.use('/api', ordersRouter)
 app.use('/api', containersRouter)
 app.use('/api', esgRouter)
 app.use('/api', vendorApplicationsRouter)
+app.use('/api', carbonRouter)
 
 app.get('/health', (_req, res) => res.json({ status: 'ok' }))
 
