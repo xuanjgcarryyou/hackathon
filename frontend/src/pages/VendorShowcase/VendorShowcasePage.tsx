@@ -3,7 +3,7 @@ import Navbar from '../../components/Navbar'
 import { api } from '../../api/client'
 import type { VendorESGProfile } from '../../types'
 import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell,
+  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, LabelList,
 } from 'recharts'
 
 const verificationBadge: Record<string, { label: string; className: string }> = {
@@ -101,7 +101,7 @@ function VendorCard({ vendor }: { vendor: VendorESGProfile }) {
       <div>
         <p className="text-xs font-semibold text-gray-600 mb-2">近六個月 CO₂e 避免排放趨勢（kg）</p>
         <ResponsiveContainer width="100%" height={110}>
-          <BarChart data={trendData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
+          <BarChart data={trendData} margin={{ top: 18, right: 4, left: -20, bottom: 0 }}>
             <XAxis dataKey="month" tick={{ fontSize: 10, fill: '#9CA3AF' }} axisLine={false} tickLine={false} />
             <YAxis tick={{ fontSize: 10, fill: '#9CA3AF' }} axisLine={false} tickLine={false} />
             <Tooltip
@@ -112,6 +112,7 @@ function VendorCard({ vendor }: { vendor: VendorESGProfile }) {
               {trendData.map((_, i) => (
                 <Cell key={i} fill={i === trendData.length - 1 ? '#059669' : '#6EE7B7'} />
               ))}
+              <LabelList dataKey="co2e" position="top" style={{ fontSize: 9, fill: '#6B7280' }} formatter={(v: number) => `${v}`} />
             </Bar>
           </BarChart>
         </ResponsiveContainer>

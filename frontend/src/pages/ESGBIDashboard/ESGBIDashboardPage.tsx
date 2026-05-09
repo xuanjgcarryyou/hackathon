@@ -3,8 +3,8 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer, ReferenceLine,
 } from 'recharts'
-import { Link } from 'react-router-dom'
 import { api } from '../../api/client'
+import Navbar from '../../components/Navbar'
 import type { ContainerStats } from '../../types/index'
 
 // ── Sankey static layout ──────────────────────────────────────────────────────
@@ -36,7 +36,7 @@ const SANKEY_FLOWS: SankeyFlow[] = [
   {
     id: 'mfg-circular',
     label: 'LCA：製造 → 循環使用節省',
-    desc: 'GHG Protocol Scope 3 Cat.11：已售產品之使用，每容器節省 0.13 kg CO₂e，採搖籃到大門（Cradle-to-Gate）邊界',
+    desc: 'GHG Protocol Scope 3 Cat.1：採購商品包材避免排放（Avoided Emissions），每容器節省 0.13 kg CO₂e，採搖籃到大門（Cradle-to-Gate）邊界',
     path: 'M 130 30 C 300 30 300 30 470 30 L 470 113 C 300 113 300 113 130 113 Z',
     fill: 'rgba(16,185,129,0.3)',
     stroke: 'rgba(16,185,129,0.55)',
@@ -44,7 +44,7 @@ const SANKEY_FLOWS: SankeyFlow[] = [
   {
     id: 'mfg-disposal',
     label: 'LCA：製造 → 廢棄處理迴避',
-    desc: 'Scope 3 Cat.12：避免一次性包材廢棄處理，採 IPCC AR6 廢棄物排放係數計算（約 0.025 kg CO₂e / 件）',
+    desc: 'Scope 3 Cat.5：避免一次性包材廢棄處理，採 IPCC AR6 廢棄物排放係數計算（約 0.025 kg CO₂e / 件）',
     path: 'M 130 113 C 300 113 300 205 470 205 L 470 232 C 300 232 300 141 130 141 Z',
     fill: 'rgba(52,211,153,0.22)',
     stroke: 'rgba(52,211,153,0.5)',
@@ -89,7 +89,7 @@ const COMPLIANCE_ITEMS = [
     label: '台灣 2030 淨零排放路徑',
     sub: 'Taiwan Net-Zero by 2030 Roadmap',
     checked: true,
-    note: 'Scope 3 Cat.11 已量測，符合環保署 NDC 揭露要求；清冊表已揭露其他類別缺口',
+    note: 'Scope 3 Cat.1 包材避免排放量（Avoided Emissions）已量測，符合環保署 NDC 揭露要求；清冊表已揭露其他類別缺口',
     badge: 'COMPLIANT',
     badgeColor: 'text-emerald-400 border-emerald-500/50',
     bg: 'border-emerald-500/15 bg-emerald-500/5',
@@ -164,33 +164,8 @@ export default function ESGBIDashboardPage() {
   const co2eSaved = stats?.co2eSaved?.toFixed(1) ?? '234.5'
 
   return (
-    <div className="min-h-screen bg-[#0F172A] text-white" style={{ fontFamily: "'Inter', 'SF Pro Display', sans-serif" }}>
-
-      {/* ── Header ── */}
-      <header className="border-b border-white/8 px-8 py-3.5 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <span className="text-emerald-400 text-lg select-none">◈</span>
-          <span className="font-semibold text-sm tracking-tight">
-            循環午餐 <span className="text-emerald-400">ESG Intelligence</span>
-          </span>
-          <span className="ml-2 px-2 py-0.5 bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs rounded-md">
-            GHG Protocol ✓
-          </span>
-        </div>
-        <div className="flex items-center gap-6 text-xs text-slate-400">
-          <Link to="/dashboard" className="hover:text-white transition-colors">概覽</Link>
-          <Link to="/esg" className="hover:text-white transition-colors">ESG 報表</Link>
-          <Link to="/ai-agent" className="hover:text-white transition-colors">AI 大使</Link>
-          <Link to="/vendor-showcase" className="hover:text-white transition-colors">廠商生態</Link>
-          <button
-            onClick={() => { localStorage.removeItem('token'); localStorage.removeItem('user'); window.location.href = '/login' }}
-            className="text-slate-500 hover:text-white transition-colors"
-          >
-            登出
-          </button>
-        </div>
-      </header>
-
+    <div className="min-h-screen bg-[#0F172A] text-white font-sans">
+      <Navbar />
       <div className="p-6 max-w-7xl mx-auto space-y-5">
 
         {/* ── Section label ── */}
@@ -209,7 +184,7 @@ export default function ESGBIDashboardPage() {
           {/* KPI 1 */}
           <div className="bg-white/4 border border-white/8 rounded-xl p-5 relative overflow-hidden group hover:border-emerald-500/30 transition-colors">
             <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-emerald-500 to-teal-400" />
-            <p className="text-xs text-slate-500 uppercase tracking-widest mb-1.5">CO₂e 減量 · Scope 3 Cat.11</p>
+            <p className="text-xs text-slate-500 uppercase tracking-widest mb-1.5">CO₂e 減量 · Scope 3 Cat.1 Avoided</p>
             <p className="text-4xl font-bold text-emerald-400 tabular-nums">
               {co2eSaved}
               <span className="text-base font-normal text-slate-500 ml-1.5">kg</span>
