@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>循環午餐 B2B 平台 — Pitch Deck</title>
+<style>
+  /* ===== Print Setup ===== */
+  @page {
+    size: A4 landscape;
+    margin: 0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Microsoft JhengHei', 'PingFang TC', 'Noto Sans TC', sans-serif;
+    background: #e5e7eb;
+  }
+
+  /* ===== Slide Base ===== */
+  .slide {
+    width: 297mm;
+    height: 210mm;
+    overflow: hidden;
+    position: relative;
+    background: white;
+    page-break-after: always;
+    page-break-inside: avoid;
+  }
+  @media print {
+    body { background: white; }
+    .slide { page-break-after: always; margin: 0; }
+    .slide:last-child { page-break-after: avoid; }
+    .screen-only { display: none; }
+  }
+  @media screen {
+    body { padding: 20px; gap: 20px; display: flex; flex-direction: column; align-items: center; }
+    .slide { box-shadow: 0 4px 24px rgba(0,0,0,0.15); margin-bottom: 20px; }
+  }
+
+  /* ===== Color Tokens ===== */
+  :root {
+    --green-900: #1B4332;
+    --green-700: #2D6A4F;
+    --green-600: #40916C;
+    --green-500: #52B788;
+    --green-300: #95D5B2;
+    --green-100: #D8F3DC;
+    --green-50:  #F0FDF4;
+    --blue-600:  #2563EB;
+    --blue-100:  #DBEAFE;
+    --amber-500: #F59E0B;
+    --gray-800:  #1F2937;
+    --gray-600:  #4B5563;
+    --gray-400:  #9CA3AF;
+    --gray-100:  #F3F4F6;
+  }
+
+  /* ===== Screenshot Placeholder ===== */
+  .ss-placeholder {
+    background: var(--green-100);
+    border: 2px dashed var(--green-500);
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--green-700);
+    font-size: 11px;
+    gap: 4px;
+    text-align: center;
+  }
+  .ss-placeholder .icon { font-size: 22px; }
+  .ss-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    border-radius: 6px;
+    display: block;
+  }
+  .step-ss, .value-ss { overflow: hidden; }
+
+  /* ============================================================
+     SLIDE 1 — COVER
+     ============================================================ */
+  #slide1 {
+    background: var(--green-900);
+    display: flex;
+    flex-direction: column;
+  }
+  .cover-body {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 0 18mm;
+    gap: 14mm;
+  }
+  .cover-left { flex: 1; }
+  .cover-tag {
+    display: inline-block;
+    background: var(--green-700);
+    color: var(--green-300);
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+  .cover-title {
+    font-size: 56pt;
+    font-weight: 700;
+    color: white;
+    line-height: 1.05;
+    letter-spacing: -1px;
+  }
+  .cover-subtitle {
+    font-size: 17pt;
+    color: var(--green-300);
+    margin-top: 4px;
+    font-weight: 300;
+  }
+  .cover-tagline {
+    margin-top: 14px;
+    font-size: 11pt;
+    color: #A7F3D0;
+    line-height: 1.6;
+  }
+  .cover-right {
+    width: 90mm;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .cover-badge {
+    background: var(--green-700);
+    border-radius: 10px;
+    padding: 14px 10px;
+    text-align: center;
+  }
+  .cover-badge .badge-val {
+    font-size: 18pt;
+    font-weight: 700;
+    color: white;
+    display: block;
+  }
+  .cover-badge .badge-label {
+    font-size: 9pt;
+    color: var(--green-300);
+    margin-top: 3px;
+    display: block;
+  }
+  .cover-footer {
+    height: 16mm;
+    background: var(--green-700);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 18mm;
+  }
+  .cover-footer span {
+    color: var(--green-300);
+    font-size: 10pt;
+  }
+
+  /* ============================================================
+     SLIDE 2 — PROBLEM
+     ============================================================ */
+  #slide2 { display: flex; flex-direction: column; }
+  .slide-header {
+    height: 22mm;
+    background: var(--green-900);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 12mm;
+  }
+  .slide-header h2 {
+    font-size: 20pt;
+    color: white;
+    font-weight: 700;
+  }
+  .slide-header p {
+    font-size: 10pt;
+    color: var(--green-300);
+    margin-top: 2px;
+  }
+  .problem-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px 12mm 10px;
+  }
+  .problem-card {
+    flex: 1;
+    background: var(--gray-100);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 16px;
+    border-left: 6px solid var(--green-600);
+    position: relative;
+    overflow: hidden;
+  }
+  .problem-card::after {
+    content: '';
+    position: absolute;
+    right: -20px; top: -20px;
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: var(--green-100);
+    opacity: 0.5;
+  }
+  .problem-icon { font-size: 28pt; flex-shrink: 0; }
+  .problem-text h3 {
+    font-size: 13pt;
+    color: var(--green-900);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .problem-text p {
+    font-size: 10pt;
+    color: var(--gray-600);
+    line-height: 1.5;
+  }
+
+  /* ============================================================
+     SLIDE 3 — FLOW
+     ============================================================ */
+  #slide3 { display: flex; flex-direction: column; }
+  .flow-body {
+    flex: 1;
+    display: flex;
+    gap: 0;
+    padding: 8px 10mm 10px;
+    align-items: stretch;
+  }
+  .flow-step {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .flow-step:not(:last-child)::after {
+    content: '›';
+    position: absolute;
+    right: -10px;
+    top: 18px;
+    font-size: 20pt;
+    color: var(--green-500);
+    z-index: 10;
+    font-weight: 700;
+  }
+  .flow-step-inner {
+    flex: 1;
+    background: white;
+    border: 1.5px solid var(--green-300);
+    border-radius: 10px;
+    margin: 0 6px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .step-header {
+    background: var(--green-900);
+    padding: 8px 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .step-num {
+    width: 22px; height: 22px;
+    background: var(--green-500);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: white;
+    font-size: 10pt;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .step-title {
+    font-size: 11pt;
+    font-weight: 700;
+    color: white;
+  }
+  .step-desc {
+    font-size: 8.5pt;
+    color: var(--green-300);
+    margin-top: 2px;
+    padding: 0 10px 6px;
+    flex-shrink: 0;
+  }
+  .step-ss {
+    flex: 1;
+    margin: 0 6px 6px;
+  }
+
+  /* ============================================================
+     SLIDE 4 — VALUE
+     ============================================================ */
+  #slide4 { display: flex; flex-direction: column; }
+  .value-body {
+    flex: 1;
+    display: flex;
+    gap: 8px;
+    padding: 8px 12mm 10px;
+  }
+  .value-col {
+    flex: 1;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    border: 1.5px solid transparent;
+  }
+  .value-col-header {
+    padding: 12px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .value-col-header .v-icon { font-size: 22pt; display: block; margin-bottom: 4px; }
+  .value-col-header h3 { font-size: 14pt; font-weight: 700; color: white; }
+  .value-col-body {
+    flex: 1;
+    background: white;
+    display: flex;
+    flex-direction: column;
+  }
+  .value-metrics {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 10px;
+    flex-shrink: 0;
+  }
+  .value-metric {
+    padding: 6px 0;
+    border-bottom: 1px solid var(--gray-100);
+  }
+  .value-metric:last-child { border-bottom: none; }
+  .value-metric .m-val {
+    font-size: 12pt;
+    font-weight: 700;
+    display: block;
+  }
+  .value-metric .m-desc {
+    font-size: 9pt;
+    color: var(--gray-600);
+  }
+  .value-ss {
+    flex: 1;
+    margin: 0 8px 8px;
+    min-height: 40px;
+  }
+
+  /* Color variants */
+  .col-green .value-col-header { background: var(--green-700); }
+  .col-green { border-color: var(--green-600); }
+  .col-green .m-val { color: var(--green-700); }
+  .col-blue .value-col-header { background: var(--blue-600); }
+  .col-blue { border-color: #3B82F6; }
+  .col-blue .m-val { color: var(--blue-600); }
+  .col-dark .value-col-header { background: var(--green-900); }
+  .col-dark { border-color: var(--green-900); }
+  .col-dark .m-val { color: var(--green-900); }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     SLIDE 1: COVER
+     ============================================================ -->
+<div class="slide" id="slide1">
+  <div class="cover-body">
+    <div class="cover-left">
+      <div class="cover-tag">♻ B2B 循環餐具管理平台</div>
+      <div class="cover-title">循環午餐</div>
+      <div class="cover-subtitle">Circular Lunch Platform</div>
+      <div class="cover-tagline">
+        讓企業真正能導入 · 管理 · 認證循環使用價值<br>
+        第三方平台，連結企業 × 餐廳 × 循環餐具服務商
+      </div>
+    </div>
+    <div class="cover-right">
+      <div class="cover-badge">
+        <span class="badge-val">3 角色</span>
+        <span class="badge-label">企業 / 員工 / 餐廳</span>
+      </div>
+      <div class="cover-badge">
+        <span class="badge-val">QR 回收</span>
+        <span class="badge-label">即時追蹤容器</span>
+      </div>
+      <div class="cover-badge">
+        <span class="badge-val">AI Agent</span>
+        <span class="badge-label">ESG 自動報表</span>
+      </div>
+      <div class="cover-badge">
+        <span class="badge-val">Scope 3</span>
+        <span class="badge-label">碳排放計算</span>
+      </div>
+    </div>
+  </div>
+  <div class="cover-footer">
+    <span>循環午餐 Circular Lunch Platform</span>
+    <span>2026 · 黑客松</span>
+  </div>
+</div>
+
+<!-- ============================================================
+     SLIDE 2: PROBLEM
+     ============================================================ -->
+<div class="slide" id="slide2">
+  <div class="slide-header">
+    <h2>問題</h2>
+    <p>企業不是不想減少一次性餐具，而是缺乏方便導入、方便管理、能夠認證的系統</p>
+  </div>
+  <div class="problem-body">
+    <div class="problem-card">
+      <div class="problem-icon">😩</div>
+      <div class="problem-text">
+        <h3>導入門檻高</h3>
+        <p>循環餐具服務商與企業之間缺乏數位橋接，採購、追蹤流程靠人工效率低落。<br>
+           企業想用卻不知道從哪裡開始，服務商也沒辦法輕鬆入駐管理。</p>
+      </div>
+    </div>
+    <div class="problem-card">
+      <div class="problem-icon">📊</div>
+      <div class="problem-text">
+        <h3>無法追蹤管理</h3>
+        <p>容器出貨後不知道在哪、回收率多少，全靠感覺估算。<br>
+           管理人員無法即時掌握每日實際回收狀況，異常容器流失難以察覺。</p>
+      </div>
+    </div>
+    <div class="problem-card">
+      <div class="problem-icon">📋</div>
+      <div class="problem-text">
+        <h3>報告整理費時</h3>
+        <p>每次 ESG / Scope 3 報告都要手工整理資料，成本高且易出錯。<br>
+           現有資料零散、格式不一，整理一份報告往往需要數天時間。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SLIDE 3: FLOW
+     ============================================================ -->
+<div class="slide" id="slide3">
+  <div class="slide-header">
+    <h2>解方與使用流程</h2>
+    <p>第三方 B2B 平台，連結企業、餐廳與循環餐具服務商 — 員工無需改變使用習慣</p>
+  </div>
+  <div class="flow-body">
+
+    <!-- Step 1 -->
+    <div class="flow-step">
+      <div class="flow-step-inner">
+        <div class="step-header">
+          <div class="step-num">1</div>
+          <div class="step-title">HR 選餐廳</div>
+        </div>
+        <div class="step-desc">HR 在平台篩選、選定本週合作餐廳</div>
+        <div class="step-ss">
+          <img class="ss-img" src="screenshots/company_admin.png">
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="flow-step">
+      <div class="flow-step-inner">
+        <div class="step-header">
+          <div class="step-num">2</div>
+          <div class="step-title">員工點餐</div>
+        </div>
+        <div class="step-desc">員工如常點餐，無需額外學習</div>
+        <div class="step-ss">
+          <img class="ss-img" src="screenshots/order.png">
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="flow-step">
+      <div class="flow-step-inner">
+        <div class="step-header">
+          <div class="step-num">3</div>
+          <div class="step-title">QR 回收記錄</div>
+        </div>
+        <div class="step-desc">餐後掃碼回收，即時更新容器狀態</div>
+        <div class="step-ss">
+          <img class="ss-img" src="screenshots/qr.png">
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="flow-step">
+      <div class="flow-step-inner">
+        <div class="step-header">
+          <div class="step-num">4</div>
+          <div class="step-title">ESG 自動產出</div>
+        </div>
+        <div class="step-desc">AI Agent 整理 Scope 3 相關報表</div>
+        <div class="step-ss">
+          <img class="ss-img" src="screenshots/esg.png">
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================================
+     SLIDE 4: VALUE
+     ============================================================ -->
+<div class="slide" id="slide4">
+  <div class="slide-header">
+    <h2>三大核心價值</h2>
+    <p>不只是一個新的環保餐具物流，而是建立讓企業真正導入、管理、認證循環價值的系統</p>
+  </div>
+  <div class="value-body">
+
+    <!-- 便利性 -->
+    <div class="value-col col-green">
+      <div class="value-col-header">
+        <span class="v-icon">🚀</span>
+        <h3>便利性</h3>
+      </div>
+      <div class="value-col-body">
+        <div class="value-metrics">
+          <div class="value-metric">
+            <span class="m-val">員工秒常點餐</span>
+            <span class="m-desc">如常選餐點，不需改變習慣</span>
+          </div>
+          <div class="value-metric">
+            <span class="m-val">公司一鍵設定</span>
+            <span class="m-desc">每週一次，HR 輕鬆管理</span>
+          </div>
+        </div>
+        <div class="value-ss">
+          <img class="ss-img" src="screenshots/company_admin.png">
+        </div>
+      </div>
+    </div>
+
+    <!-- 管理性 -->
+    <div class="value-col col-blue">
+      <div class="value-col-header">
+        <span class="v-icon">📊</span>
+        <h3>管理性</h3>
+      </div>
+      <div class="value-col-body">
+        <div class="value-metrics">
+          <div class="value-metric">
+            <span class="m-val" style="color:#2563EB;">即時回收率</span>
+            <span class="m-desc">知道多少容器被正確回收</span>
+          </div>
+          <div class="value-metric">
+            <span class="m-val" style="color:#2563EB;">QR 精準追蹤</span>
+            <span class="m-desc">自動更新容器狀態，異常偵測</span>
+          </div>
+        </div>
+        <div class="value-ss">
+          <img class="ss-img" src="screenshots/dashboard.png">
+        </div>
+      </div>
+    </div>
+
+    <!-- 循環價值 -->
+    <div class="value-col col-dark">
+      <div class="value-col-header">
+        <span class="v-icon">🌿</span>
+        <h3>循環價值</h3>
+      </div>
+      <div class="value-col-body">
+        <div class="value-metrics">
+          <div class="value-metric">
+            <span class="m-val">AI ESG 報表</span>
+            <span class="m-desc">自動產出 Scope 3 相關報表</span>
+          </div>
+          <div class="value-metric">
+            <span class="m-val">省去手工整理</span>
+            <span class="m-desc">大幅降低合規成本</span>
+          </div>
+        </div>
+        <div class="value-ss">
+          <img class="ss-img" src="screenshots/esg.png">
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Screen-only navigation hint -->
+<div class="screen-only" style="text-align:center;padding:16px;color:#6B7280;font-size:13px;">
+  在 Chrome 按 <strong>Ctrl+P</strong> → 「儲存成 PDF」，版面設定選 <strong>A4 橫向、無邊距</strong>
+</div>
+
+</body>
+</html>
