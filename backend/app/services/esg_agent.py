@@ -37,21 +37,22 @@ def _parse_response(text: str):
 
 def _mock_report(data: dict) -> tuple[str, str, list]:
     r = data['return_rate']
-    zh = f"""本報告依據 GHG Protocol Scope 3 第 11 類（已售產品之使用）框架編製。
+    source = data.get('carbon_factor_source', '')
+    zh = f"""本報告依據 GHG Protocol Scope 3 第 11 類（已售產品之使用）框架編製。本報告揭露範圍僅涵蓋 Scope 3 Category 11，不包含其他 Scope 3 類別（如運輸、廢棄物等）。
 
 報告期間 {data['period_start']} 至 {data['period_end']}，本公司透過循環午餐平台合作餐廳共完成 {data['total_meals']} 份餐點訂購，其中 {data['circular_meals']} 份採用環保服務商「{data['vendor_name']}」提供之循環容器，循環使用率達 {r:.1%}。
 
 相較於傳統一次性包材，本期循環方案合計減少 {data['reduced_packaging_kg']:.1f} kg 一次性塑膠包材使用，依據碳因子 {data['carbon_factor']} kg CO₂e / 循環次計算，本期共減少溫室氣體排放 {data['co2e_saved']:.2f} kg CO₂e。
 
-本公司將持續擴大循環容器使用比例，並委託第三方機構對上述數據進行確信，以符合 ESG 揭露之完整性與可驗證性要求。"""
+碳因子來源：{source}。本數據可透過報告末附之資料稽核碼進行追溯驗證。"""
 
-    en = f"""This report is prepared in accordance with the GHG Protocol Scope 3, Category 11 (Use of Sold Products) framework.
+    en = f"""This report is prepared in accordance with the GHG Protocol Scope 3, Category 11 (Use of Sold Products) framework. The scope of this report covers Scope 3 Category 11 only and does not include other Scope 3 categories (e.g., transportation, waste).
 
 During the reporting period from {data['period_start']} to {data['period_end']}, the company facilitated {data['total_meals']} meal orders through the Circular Lunch Platform. Of these, {data['circular_meals']} meals utilized reusable containers provided by eco-partner "{data['vendor_name']}", achieving a circular usage rate of {r:.1%}.
 
 Compared to single-use packaging, this initiative avoided {data['reduced_packaging_kg']:.1f} kg of disposable plastic materials. Based on an emission factor of {data['carbon_factor']} kg CO₂e per circulation cycle, total greenhouse gas reductions for the period amounted to {data['co2e_saved']:.2f} kg CO₂e.
 
-The company is committed to increasing the adoption of reusable containers and will engage third-party assurance to meet completeness and verifiability requirements for ESG disclosure."""
+Emission factor sources: {source}. All figures are traceable via the data audit hash appended to this report."""
 
     tables = [{"title": "循環容器使用數據摘要", "headers": ["指標", "數值"], "rows": []}]
     return zh, en, tables
@@ -72,6 +73,12 @@ async def generate_esg_report(data: dict) -> tuple[str, str, list]:
 避免一次性包材重量：{data['reduced_packaging_kg']:.1f} kg
 CO₂e 減量：{data['co2e_saved']:.2f} kg
 使用環保服務商：{data['vendor_name']}（碳因子：{data['carbon_factor']} kg CO₂e / 循環次）
+碳因子來源：{data.get('carbon_factor_source', '')}
+
+注意：
+- 揭露範圍僅涵蓋 GHG Protocol Scope 3 Category 11，請在報告中明確說明不涵蓋其他類別
+- 碳因子來源需在報告中引用
+- 最後一段說明數據可透過稽核碼追溯
 
 請先輸出 [ZH] 中文版，再輸出 [EN] 英文版。"""
 

@@ -102,6 +102,22 @@ export default function ESGReportPage() {
             <div className="bg-gray-50 rounded-lg p-4 text-sm text-gray-700 whitespace-pre-wrap leading-relaxed">
               {tab === 'zh' ? report.reportTextZh : report.reportTextEn}
             </div>
+
+            {report.carbonFactorSource && (
+              <div className="mt-4 bg-blue-50 border border-blue-100 rounded-lg px-4 py-3">
+                <p className="text-xs font-semibold text-blue-700 mb-1">碳因子來源</p>
+                <p className="text-xs text-blue-600">{report.carbonFactorSource}</p>
+              </div>
+            )}
+
+            {report.dataHash && (
+              <div className="mt-3 bg-gray-100 rounded-lg px-4 py-3 flex items-start gap-3">
+                <div className="flex-1">
+                  <p className="text-xs font-semibold text-gray-500 mb-1">資料稽核碼（SHA-256）</p>
+                  <p className="text-xs font-mono text-gray-500 break-all">{report.dataHash}</p>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

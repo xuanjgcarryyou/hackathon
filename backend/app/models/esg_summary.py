@@ -20,3 +20,6 @@ class ESGSummary(Base):
     report_text_en: Mapped[str] = mapped_column(Text, default="")
     tables: Mapped[list] = mapped_column(JSON, default=list)
     generated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    carbon_factor_source: Mapped[str] = mapped_column(String, default="")
+    data_hash: Mapped[str] = mapped_column(String, default="")
+    batch_ids: Mapped[list] = mapped_column(JSON, default=list)

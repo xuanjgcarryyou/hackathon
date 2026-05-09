@@ -1,3 +1,5 @@
+import hashlib
+import json
 import uuid
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
@@ -9,7 +11,7 @@ from app.deps import get_current_user
 from app.models.container_batch import ContainerBatch
 from app.models.esg_summary import ESGSummary
 from app.services.esg_agent import generate_esg_report
-from app.services.container_calc import calc_co2e_saved
+from app.services.container_calc import calc_co2e_saved, DISPOSABLE_CO2E_SOURCE, CIRCULAR_CO2E_SOURCE
 
 router = APIRouter()
 
@@ -38,6 +40,11 @@ async def create_esg_report(body: ESGRequest, db: AsyncSession = Depends(get_db)
     co2e_saved = sum(calc_co2e_saved(b.collected_count or 0, 0.15) for b in batches)
     reduced_packaging_kg = circular_meals * PACKAGING_KG_PER_UNIT
 
+    batch_ids = [b.id for b in batches]
+    raw_for_hash = [{"id": b.id, "qty": b.quantity, "collected": b.collected_count or 0} for b in batches]
+    data_hash = hashlib.sha256(json.dumps(raw_for_hash, sort_keys=True).encode()).hexdigest()
+    carbon_factor_source = f"一次性包材：{DISPOSABLE_CO2E_SOURCE}；循環容器：{CIRCULAR_CO2E_SOURCE}"
+
     report_data = {
         "period_start": body.periodStart,
         "period_end": body.periodEnd,
@@ -48,6 +55,7 @@ async def create_esg_report(body: ESGRequest, db: AsyncSession = Depends(get_db)
         "co2e_saved": round(co2e_saved, 2),
         "vendor_name": "Loopick",
         "carbon_factor": 0.15,
+        "carbon_factor_source": carbon_factor_source,
     }
 
     report_text_zh, report_text_en, tables = await generate_esg_report(report_data)
@@ -64,6 +72,9 @@ async def create_esg_report(body: ESGRequest, db: AsyncSession = Depends(get_db)
         report_text_zh=report_text_zh,
         report_text_en=report_text_en,
         tables=tables,
+        carbon_factor_source=carbon_factor_source,
+        data_hash=data_hash,
+        batch_ids=batch_ids,
     )
     db.add(summary)
     await db.commit()
@@ -77,4 +88,6 @@ async def create_esg_report(body: ESGRequest, db: AsyncSession = Depends(get_db)
         "reportTextZh": report_text_zh,
         "reportTextEn": report_text_en,
         "tables": tables,
+        "carbonFactorSource": carbon_factor_source,
+        "dataHash": data_hash,
     }

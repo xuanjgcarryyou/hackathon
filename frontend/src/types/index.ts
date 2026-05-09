@@ -47,6 +47,8 @@ export interface ESGReport {
   reportTextZh: string
   reportTextEn: string
   tables: ESGTable[]
+  carbonFactorSource?: string
+  dataHash?: string
 }
 
 export interface VendorApplication {
