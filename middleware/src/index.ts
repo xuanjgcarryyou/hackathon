@@ -5,6 +5,7 @@ import authRouter from './routes/auth'
 import ordersRouter from './routes/orders'
 import containersRouter from './routes/containers'
 import esgRouter from './routes/esg'
+import vendorApplicationsRouter from './routes/vendorApplications'
 import { setupWebSocket } from './ws/wsServer'
 
 const app = express()
@@ -14,6 +15,7 @@ app.use('/', authRouter)
 app.use('/api', ordersRouter)
 app.use('/api', containersRouter)
 app.use('/api', esgRouter)
+app.use('/api', vendorApplicationsRouter)
 
 app.get('/health', (_req, res) => res.json({ status: 'ok' }))
 
