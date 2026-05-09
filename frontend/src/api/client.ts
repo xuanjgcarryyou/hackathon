@@ -38,6 +38,9 @@ export const api = {
   exportESGReport: (reportId: string) =>
     apiClient.get(`/api/esg/${reportId}/export`, { responseType: 'blob' }),
 
+  exportESGReportXlsx: (reportId: string) =>
+    apiClient.get(`/api/esg/${reportId}/export/xlsx`, { responseType: 'blob' }),
+
   applyVendor: (data: VendorApplication) =>
     apiClient.post('/api/vendors/apply', data),
 

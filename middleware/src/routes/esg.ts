@@ -35,6 +35,25 @@ router.get('/esg/:reportId/export', authGuard, async (req: AuthRequest, res) => 
   }
 })
 
+router.get('/esg/:reportId/export/xlsx', authGuard, async (req: AuthRequest, res) => {
+  try {
+    const axios = (await import('axios')).default
+    const backendUrl = process.env.BACKEND_URL || 'http://backend:8000'
+    const response = await axios.get(
+      `${backendUrl}/api/esg/${req.params.reportId}/export/xlsx`,
+      {
+        headers: { Authorization: req.headers.authorization! },
+        responseType: 'arraybuffer',
+      }
+    )
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    res.setHeader('Content-Disposition', `attachment; filename="esg-report-${req.params.reportId.slice(0, 8)}.xlsx"`)
+    res.send(Buffer.from(response.data))
+  } catch (err: any) {
+    res.status(err.response?.status || 500).json(err.response?.data || { error: 'XLSX_EXPORT_FAILED' })
+  }
+})
+
 router.post('/esg/generate', authGuard, async (req: AuthRequest, res) => {
   try {
     const result = await forwardRequest('POST', '/api/esg/generate', req.body, {
