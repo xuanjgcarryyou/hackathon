@@ -1,6 +1,4 @@
-const WS_BASE = (import.meta.env.VITE_MIDDLEWARE_URL || 'http://localhost:3000')
-  .replace('http://', 'ws://')
-  .replace('https://', 'wss://')
+const WS_BASE = `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}`
 
 type WSHandler = (payload: unknown) => void
 

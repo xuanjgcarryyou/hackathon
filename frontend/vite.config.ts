@@ -9,6 +9,7 @@ export default defineConfig({
     proxy: {
       '/auth': { target: 'http://middleware:3000', changeOrigin: true },
       '/api':  { target: 'http://middleware:3000', changeOrigin: true },
+      '/ws':   { target: 'ws://middleware:3000',   changeOrigin: true, ws: true },
     },
   },
 })
