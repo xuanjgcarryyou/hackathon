@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from passlib.context import CryptContext
 
 from app.database import engine, AsyncSessionLocal, Base
-from app.models import user, company, vendor, restaurant, order, container_batch, esg_summary, vendor_application  # noqa
+from app.models import user, company, vendor, restaurant, order, container_batch, esg_summary, vendor_application, packaging_type, vendor_esg_profile, esg_calculation_method  # noqa
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -157,6 +157,70 @@ async def seed():
                 reviewed_by="user-hr-001",
             ),
         ])
+
+        # Stage 5: PackagingType seed
+        from app.models.packaging_type import PackagingType
+        packaging_types_data = [
+            {"id": "pkg-001", "name": "午餐餐盒", "category": "lunch_box", "material": "PP+不銹鋼",
+             "single_use_weight_kg": 0.025, "reusable_cycle_co2e_factor": 0.15,
+             "expected_lifespan_cycles": 500, "factor_source": "台灣環保署《一次性塑膠餐具生命週期評估》(2022)"},
+            {"id": "pkg-002", "name": "飲料杯", "category": "drink_cup", "material": "不銹鋼",
+             "single_use_weight_kg": 0.015, "reusable_cycle_co2e_factor": 0.08,
+             "expected_lifespan_cycles": 300, "factor_source": "Ecoinvent 3.9 — stainless cup washing"},
+            {"id": "pkg-003", "name": "湯碗", "category": "soup_bowl", "material": "陶瓷",
+             "single_use_weight_kg": 0.020, "reusable_cycle_co2e_factor": 0.12,
+             "expected_lifespan_cycles": 400, "factor_source": "台灣環保署(2022)"},
+            {"id": "pkg-004", "name": "餐具組", "category": "utensil_set", "material": "竹製",
+             "single_use_weight_kg": 0.010, "reusable_cycle_co2e_factor": 0.05,
+             "expected_lifespan_cycles": 200, "factor_source": "Ecoinvent 3.9 — bamboo utensil"},
+            {"id": "pkg-005", "name": "外送袋", "category": "delivery_bag", "material": "棉帆布",
+             "single_use_weight_kg": 0.050, "reusable_cycle_co2e_factor": 0.30,
+             "expected_lifespan_cycles": 150, "factor_source": "台灣環保署(2022)"},
+        ]
+        for pt_data in packaging_types_data:
+            existing_pt = await db.execute(select(PackagingType).where(PackagingType.id == pt_data["id"]))
+            if not existing_pt.scalar_one_or_none():
+                db.add(PackagingType(**pt_data))
+
+        # Stage 6: VendorESGProfile seed (first vendor)
+        from app.models.vendor_esg_profile import VendorESGProfile
+        first_vendor_result = await db.execute(select(Vendor))
+        first_vendor = first_vendor_result.scalars().first()
+        if first_vendor:
+            existing_esg = await db.execute(
+                select(VendorESGProfile).where(VendorESGProfile.vendor_id == first_vendor.id)
+            )
+            if not existing_esg.scalar_one_or_none():
+                db.add(VendorESGProfile(
+                    id=str(uuid.uuid4()),
+                    vendor_id=first_vendor.id,
+                    description="Loopick 致力於提供高品質循環容器，合作超過 50 家企業，累計減少 10 萬件一次性包材。",
+                    total_reusable_items_served=58420,
+                    average_return_rate=0.91,
+                    estimated_co2e_saved=8763.0,
+                    estimated_packaging_reduced_kg=1460.5,
+                    verification_status="platform_checked",
+                    partner_groups=["科技業", "金融業", "教育機構"],
+                    public_profile_enabled=True,
+                    updated_at=datetime.utcnow(),
+                ))
+
+        # Stage 7: ESGCalculationMethod seed
+        from app.models.esg_calculation_method import ESGCalculationMethod
+        existing_method = await db.execute(
+            select(ESGCalculationMethod).where(ESGCalculationMethod.id == "method-001")
+        )
+        if not existing_method.scalar_one_or_none():
+            db.add(ESGCalculationMethod(
+                id="method-001",
+                method_name="GHG Protocol Scope 3 Cat.11 — 循環午餐容器減碳計算",
+                scope_category="Scope 3 Category 11",
+                emission_factor_source="台灣環保署《一次性塑膠餐具生命週期評估》(2022)；Ecoinvent 3.9",
+                factor_version="2022-v1",
+                valid_region="TW",
+                assumption_note="一次性餐盒碳排 0.3 kg CO₂e/件（環保署），循環容器清洗碳排 0.15 kg CO₂e/次（Ecoinvent 3.9）。Scope 3 僅涵蓋 Category 11。",
+                active=True,
+            ))
 
         await db.commit()
         print("Seed complete. Demo accounts: hr@demo.com / mgr@demo.com / emp@demo.com (password: demo1234)")

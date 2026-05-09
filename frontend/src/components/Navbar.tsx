@@ -23,12 +23,15 @@ export default function Navbar() {
             <Link to="/vendor-applications" className="hover:underline">廠商審核</Link>
             <Link to="/scan" className="hover:underline">QR 回收</Link>
             <Link to="/esg" className="hover:underline">ESG 報表</Link>
+            <Link to="/vendor-showcase" className="hover:underline">廠商生態</Link>
+            <Link to="/ai-agent" className="hover:underline">AI 大使</Link>
           </>
         )}
         {role === 'manager' && (
           <>
             <Link to="/company-admin" className="hover:underline">選擇餐廳</Link>
             <Link to="/esg" className="hover:underline">ESG 報表</Link>
+            <Link to="/ai-agent" className="hover:underline">AI 大使</Link>
           </>
         )}
         {role === 'employee' && (

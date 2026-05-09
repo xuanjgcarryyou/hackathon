@@ -70,3 +70,27 @@ export interface VendorApplicationRecord extends VendorApplication {
   reviewedAt?: string
   reviewNote?: string
 }
+
+export interface VendorESGProfile {
+  vendorId: string
+  vendorName: string
+  certifications: string[]
+  carbonFactorPerCycle: number
+  containerTypes: string[]
+  description: string
+  totalReusableItemsServed: number
+  averageReturnRate: number
+  estimatedCo2eSaved: number
+  estimatedPackagingReducedKg: number
+  verificationStatus: 'unverified' | 'self_declared' | 'platform_checked' | 'third_party_verified'
+  partnerGroups: string[]
+}
+
+export interface ESGCalculationMethod {
+  id: string
+  methodName: string
+  scopeCategory: string
+  emissionFactorSource: string
+  factorVersion: string
+  assumptionNote: string
+}

@@ -46,4 +46,7 @@ export const api = {
 
   reviewVendorApplication: (id: string, action: 'approve' | 'reject', note?: string) =>
     apiClient.post(`/api/vendors/applications/${id}/review`, { action, note }),
+
+  getPublicVendorESG: () => apiClient.get('/api/vendors/public-esg'),
+  getESGCalculationMethods: () => apiClient.get('/api/esg/calculation-methods'),
 }

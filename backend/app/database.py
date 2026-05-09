@@ -20,7 +20,7 @@ async def get_db():
 
 async def init_db():
     async with engine.begin() as conn:
-        from app.models import user, company, vendor, restaurant, order, container_batch, esg_summary, vendor_application  # noqa
+        from app.models import user, company, vendor, restaurant, order, container_batch, esg_summary, vendor_application, packaging_type, vendor_esg_profile, esg_calculation_method  # noqa
         await conn.run_sync(Base.metadata.create_all)
         from sqlalchemy import text
         for col, coltype in [

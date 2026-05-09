@@ -7,6 +7,8 @@ import ESGReportPage from './pages/ESGReport/ESGReportPage'
 import VendorPortalPage from './pages/VendorPortal/VendorPortalPage'
 import VendorApplicationsPage from './pages/VendorApplications/VendorApplicationsPage'
 import CompanyAdminPage from './pages/CompanyAdmin/CompanyAdminPage'
+import VendorShowcasePage from './pages/VendorShowcase/VendorShowcasePage'
+import AIAgentPage from './pages/AIAgent/AIAgentPage'
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const token = localStorage.getItem('token')
@@ -25,6 +27,8 @@ export default function App() {
         <Route path="/vendor-portal" element={<VendorPortalPage />} />
         <Route path="/vendor-applications" element={<PrivateRoute><VendorApplicationsPage /></PrivateRoute>} />
         <Route path="/company-admin" element={<PrivateRoute><CompanyAdminPage /></PrivateRoute>} />
+        <Route path="/vendor-showcase" element={<VendorShowcasePage />} />
+        <Route path="/ai-agent" element={<PrivateRoute><AIAgentPage /></PrivateRoute>} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </BrowserRouter>
