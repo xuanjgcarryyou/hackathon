@@ -60,3 +60,11 @@ export interface VendorApplication {
   description: string
   materialFileNames: string[]
 }
+
+export interface VendorApplicationRecord extends VendorApplication {
+  id: string
+  status: 'pending' | 'approved' | 'rejected'
+  submittedAt: string
+  reviewedAt?: string
+  reviewNote?: string
+}
