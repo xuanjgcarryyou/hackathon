@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loopick 系統名詞表</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
+  background: #f1f5f9;
+  color: #1e293b;
+  padding: 32px 24px 64px;
+  font-size: 13px;
+}
+
+/* ── Header ── */
+h1 { font-size: 22px; font-weight: 700; text-align: center; margin-bottom: 4px; }
+.subtitle { text-align: center; color: #94a3b8; font-size: 11.5px; margin-bottom: 28px; }
+
+/* ── Search ── */
+.search-wrap {
+  max-width: 480px; margin: 0 auto 28px;
+  display: flex; gap: 8px; align-items: center;
+}
+#q {
+  flex: 1; padding: 8px 14px; border: 1.5px solid #e2e8f0;
+  border-radius: 8px; font-size: 13px; background: white;
+  outline: none; transition: border-color .15s;
+}
+#q:focus { border-color: #3b82f6; }
+#count { color: #94a3b8; font-size: 11px; white-space: nowrap; }
+
+/* ── Sections ── */
+.sections { max-width: 960px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+
+section {
+  background: white; border-radius: 12px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+.sec-hdr {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 16px; font-size: 12px; font-weight: 700;
+}
+.sec-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+/* ── Table ── */
+table { width: 100%; border-collapse: collapse; }
+thead th {
+  background: #f8fafc; font-size: 11px; font-weight: 600;
+  color: #64748b; text-align: left;
+  padding: 7px 14px; border-bottom: 1px solid #f1f5f9;
+}
+tbody tr { border-bottom: 1px solid #f8fafc; transition: background .1s; }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: #f8fafc; }
+td { padding: 7px 14px; vertical-align: middle; line-height: 1.5; }
+td.en  { font-size: 11.5px; color: #334155; font-family: 'SF Mono', 'Fira Code', monospace; }
+td.zh  { font-weight: 500; }
+td.def { color: #475569; font-size: 12px; }
+td.tag { }
+
+.tag-pill {
+  display: inline-block;
+  font-size: 10px; font-weight: 600;
+  padding: 1.5px 8px; border-radius: 20px;
+  white-space: nowrap;
+}
+
+/* hidden row */
+tr.hidden { display: none; }
+</style>
+</head>
+<body>
+
+<h1>Loopick 系統名詞表</h1>
+<p class="subtitle">B2B 循環容器 ESG 平台 · 共 <span id="total">0</span> 個名詞</p>
+
+<div class="search-wrap">
+  <input id="q" type="text" placeholder="搜尋名詞…" autocomplete="off" />
+  <span id="count"></span>
+</div>
+
+<div class="sections" id="sections">
+
+  <!-- ① 核心實體 -->
+  <section>
+    <div class="sec-hdr" style="background:#eff6ff; color:#1e40af;">
+      <span class="sec-dot" style="background:#3b82f6"></span>① 核心資料實體
+    </div>
+    <table>
+      <thead><tr><th>英文 / 代碼</th><th>中文</th><th>說明</th><th>類型</th></tr></thead>
+      <tbody>
+        <tr><td class="en">User</td><td class="zh">使用者</td><td class="def">平台登入帳號，有 HR / Employee / Manager 三種角色</td><td><span class="tag-pill" style="background:#dbeafe;color:#1d4ed8">DB 表</span></td></tr>
+        <tr><td class="en">Company</td><td class="zh">企業</td><td class="def">使用平台的甲方公司，每位 User 綁定一間 Company</td><td><span class="tag-pill" style="background:#dbeafe;color:#1d4ed8">DB 表</span></td></tr>
+        <tr><td class="en">Vendor</td><td class="zh">供應商／廠商</td><td class="def">提供循環容器與午餐服務的乙方業者</td><td><span class="tag-pill" style="background:#dbeafe;color:#1d4ed8">DB 表</span></td></tr>
+        <tr><td class="en">Restaurant</td><td class="zh">餐廳</td><td class="def">隸屬於某 Vendor 的實際供餐門市，有 supportsCircular 旗標</td><td><span class="tag-pill" style="background:#dbeafe;color:#1d4ed8">DB 表</span></td></tr>
+        <tr><td class="en">ContainerBatch</td><td class="zh">容器批次</td><td class="def">一次出貨的容器集合，含 QR Code、數量、回收狀態</td><td><span class="tag-pill" style="background:#dbeafe;color:#1d4ed8">DB 表</span></td></tr>
+        <tr><td class="en">Order / WeeklyOrder</td><td class="zh">訂單／週訂單</td><td class="def">企業針對某週向某餐廳下的團膳訂單</td><td><span class="tag-pill" style="background:#dbeafe;color:#1d4ed8">DB 表</span></td></tr>
+        <tr><td class="en">ESGSummary</td><td class="zh">ESG 報告摘要</td><td class="def">每次 ESG 報表生成的完整資料快照（含 SHA-256 稽核碼）</td><td><span class="tag-pill" style="background:#dbeafe;color:#1d4ed8">DB 表</span></td></tr>
+        <tr><td class="en">VendorApplication</td><td class="zh">供應商申請</td><td class="def">廠商申請加入平台的審核記錄</td><td><span class="tag-pill" style="background:#dbeafe;color:#1d4ed8">DB 表</span></td></tr>
+        <tr><td class="en">VendorESGProfile</td><td class="zh">廠商 ESG 檔案</td><td class="def">廠商公開展示的永續指標（回收率、CO₂e 等）</td><td><span class="tag-pill" style="background:#dbeafe;color:#1d4ed8">DB 表</span></td></tr>
+        <tr><td class="en">PackagingType</td><td class="zh">包材類型</td><td class="def">描述特定包材的碳排因子與材質資訊</td><td><span class="tag-pill" style="background:#dbeafe;color:#1d4ed8">DB 表</span></td></tr>
+        <tr><td class="en">CarbonFactor</td><td class="zh">碳因子</td><td class="def">每單位包材的 kg CO₂e 排放係數</td><td><span class="tag-pill" style="background:#dbeafe;color:#1d4ed8">DB 表</span></td></tr>
+        <tr><td class="en">PackagingLifecycleModel</td><td class="zh">包材生命週期模型</td><td class="def">各階段（原料→製造→運輸→廢棄）的碳排拆分模型</td><td><span class="tag-pill" style="background:#dbeafe;color:#1d4ed8">DB 表</span></td></tr>
+        <tr><td class="en">ESGCalculationMethod</td><td class="zh">ESG 計算方法</td><td class="def">說明碳排計算所依據的方法論與係數版本</td><td><span class="tag-pill" style="background:#dbeafe;color:#1d4ed8">DB 表</span></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ② 角色與權限 -->
+  <section>
+    <div class="sec-hdr" style="background:#f0fdf4; color:#14532d;">
+      <span class="sec-dot" style="background:#22c55e"></span>② 角色與權限
+    </div>
+    <table>
+      <thead><tr><th>英文 / 代碼</th><th>中文</th><th>說明</th><th>類型</th></tr></thead>
+      <tbody>
+        <tr><td class="en">role: admin</td><td class="zh">平台管理員</td><td class="def">可審核供應商申請、管理整個平台</td><td><span class="tag-pill" style="background:#dcfce7;color:#166534">角色值</span></td></tr>
+        <tr><td class="en">role: manager</td><td class="zh">企業主管／經理</td><td class="def">可查看 ESG 報告、供應商展示、人資儀表板</td><td><span class="tag-pill" style="background:#dcfce7;color:#166534">角色值</span></td></tr>
+        <tr><td class="en">role: employee</td><td class="zh">員工</td><td class="def">可訂餐、掃 QR Code 回收容器</td><td><span class="tag-pill" style="background:#dcfce7;color:#166534">角色值</span></td></tr>
+        <tr><td class="en">JWT</td><td class="zh">JSON Web Token</td><td class="def">登入後核發的身份憑證，HS256 簽名，有效 12 小時</td><td><span class="tag-pill" style="background:#dcfce7;color:#166534">技術</span></td></tr>
+        <tr><td class="en">authGuard</td><td class="zh">認證守衛</td><td class="def">Middleware 中間件，驗證每個 API 請求的 JWT 並注入 user 物件</td><td><span class="tag-pill" style="background:#dcfce7;color:#166534">元件</span></td></tr>
+        <tr><td class="en">company_id</td><td class="zh">企業 ID</td><td class="def">JWT payload 內的欄位，用於隔離各企業資料</td><td><span class="tag-pill" style="background:#dcfce7;color:#166534">欄位</span></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ③ 容器循環流程 -->
+  <section>
+    <div class="sec-hdr" style="background:#fff7ed; color:#7c2d12;">
+      <span class="sec-dot" style="background:#f97316"></span>③ 容器循環流程
+    </div>
+    <table>
+      <thead><tr><th>英文 / 代碼</th><th>中文</th><th>說明</th><th>類型</th></tr></thead>
+      <tbody>
+        <tr><td class="en">Dispatch</td><td class="zh">出貨／配送</td><td class="def">將循環容器從廠商送至企業的動作，產生一筆 ContainerBatch</td><td><span class="tag-pill" style="background:#ffedd5;color:#9a3412">動作</span></td></tr>
+        <tr><td class="en">Collect</td><td class="zh">回收</td><td class="def">員工掃 QR Code 後登記容器歸還，更新 collected_count</td><td><span class="tag-pill" style="background:#ffedd5;color:#9a3412">動作</span></td></tr>
+        <tr><td class="en">QR Code</td><td class="zh">二維碼</td><td class="def">每個 ContainerBatch 的唯一識別標籤，用於掃描回收</td><td><span class="tag-pill" style="background:#ffedd5;color:#9a3412">欄位</span></td></tr>
+        <tr><td class="en">status: dispatched</td><td class="zh">已出貨</td><td class="def">容器已送出、尚未回收</td><td><span class="tag-pill" style="background:#ffedd5;color:#9a3412">狀態值</span></td></tr>
+        <tr><td class="en">status: collected</td><td class="zh">已回收</td><td class="def">容器已全數或部分歸還</td><td><span class="tag-pill" style="background:#ffedd5;color:#9a3412">狀態值</span></td></tr>
+        <tr><td class="en">quantity</td><td class="zh">出貨數量</td><td class="def">一批次配送的容器總數</td><td><span class="tag-pill" style="background:#ffedd5;color:#9a3412">欄位</span></td></tr>
+        <tr><td class="en">collected_count</td><td class="zh">回收數量</td><td class="def">實際歸還的容器數，≤ quantity</td><td><span class="tag-pill" style="background:#ffedd5;color:#9a3412">欄位</span></td></tr>
+        <tr><td class="en">returnRate</td><td class="zh">回收率</td><td class="def">collected_count ÷ quantity，0–1 的小數</td><td><span class="tag-pill" style="background:#ffedd5;color:#9a3412">指標</span></td></tr>
+        <tr><td class="en">anomaly</td><td class="zh">異常</td><td class="def">回收率低於 anomalyThreshold（預設 0.9）時觸發的警示旗標</td><td><span class="tag-pill" style="background:#ffedd5;color:#9a3412">旗標</span></td></tr>
+        <tr><td class="en">ANOMALY_THRESHOLD</td><td class="zh">異常閾值</td><td class="def">預設 0.9（90%），低於此值則廣播 anomaly_alert 事件</td><td><span class="tag-pill" style="background:#ffedd5;color:#9a3412">常數</span></td></tr>
+        <tr><td class="en">PACKAGING_KG_PER_UNIT</td><td class="zh">每份包材重量</td><td class="def">每個容器預設 0.025 kg，用於計算減少包材總重</td><td><span class="tag-pill" style="background:#ffedd5;color:#9a3412">常數</span></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ④ 碳排與計算 -->
+  <section>
+    <div class="sec-hdr" style="background:#f0fdf4; color:#14532d;">
+      <span class="sec-dot" style="background:#16a34a"></span>④ 碳排計算與因子
+    </div>
+    <table>
+      <thead><tr><th>英文 / 代碼</th><th>中文</th><th>說明</th><th>類型</th></tr></thead>
+      <tbody>
+        <tr><td class="en">CO₂e</td><td class="zh">二氧化碳當量</td><td class="def">統一換算不同溫室氣體影響的排放單位（kg CO₂e）</td><td><span class="tag-pill" style="background:#dcfce7;color:#166534">單位</span></td></tr>
+        <tr><td class="en">co2eSaved</td><td class="zh">碳排避免量</td><td class="def">使用循環容器相較一次性包材所減少的 kg CO₂e（Avoided Emissions）</td><td><span class="tag-pill" style="background:#dcfce7;color:#166534">指標</span></td></tr>
+        <tr><td class="en">carbonFactor</td><td class="zh">碳因子</td><td class="def">每個容器每次使用的 kg CO₂e，預設 0.15</td><td><span class="tag-pill" style="background:#dcfce7;color:#166534">欄位</span></td></tr>
+        <tr><td class="en">carbonFactorSource</td><td class="zh">碳因子來源</td><td class="def">說明係數出處（如 ecoinvent、工研院）的文字欄位</td><td><span class="tag-pill" style="background:#dcfce7;color:#166534">欄位</span></td></tr>
+        <tr><td class="en">reducedPackagingKg</td><td class="zh">減少包材重量</td><td class="def">circlularMeals × PACKAGING_KG_PER_UNIT，單位 kg</td><td><span class="tag-pill" style="background:#dcfce7;color:#166534">指標</span></td></tr>
+        <tr><td class="en">Lifecycle Stage</td><td class="zh">生命週期階段</td><td class="def">一次性：原料→製造→運輸→廢棄；循環：生產→正向配送→清洗→逆物流→損耗</td><td><span class="tag-pill" style="background:#dcfce7;color:#166534">概念</span></td></tr>
+        <tr><td class="en">raw_material</td><td class="zh">原料取得</td><td class="def">一次性包材生命週期第一階段</td><td><span class="tag-pill" style="background:#dcfce7;color:#166534">階段</span></td></tr>
+        <tr><td class="en">manufacturing</td><td class="zh">製造加工</td><td class="def">一次性包材生命週期第二階段</td><td><span class="tag-pill" style="background:#dcfce7;color:#166534">階段</span></td></tr>
+        <tr><td class="en">disposal</td><td class="zh">廢棄處理</td><td class="def">一次性包材生命週期最終階段</td><td><span class="tag-pill" style="background:#dcfce7;color:#166534">階段</span></td></tr>
+        <tr><td class="en">washing</td><td class="zh">清洗消毒</td><td class="def">循環容器每次使用後的清潔步驟，含碳排</td><td><span class="tag-pill" style="background:#dcfce7;color:#166534">階段</span></td></tr>
+        <tr><td class="en">reverse_logistics</td><td class="zh">逆物流</td><td class="def">容器從企業回到廠商清洗設施的運輸</td><td><span class="tag-pill" style="background:#dcfce7;color:#166534">階段</span></td></tr>
+        <tr><td class="en">damage_loss</td><td class="zh">損耗攤提</td><td class="def">容器報廢成本按使用次數均攤的碳排</td><td><span class="tag-pill" style="background:#dcfce7;color:#166534">階段</span></td></tr>
+        <tr><td class="en">expectedLifespanCycles</td><td class="zh">預期使用壽命</td><td class="def">循環容器在報廢前預計可使用的總次數</td><td><span class="tag-pill" style="background:#dcfce7;color:#166534">欄位</span></td></tr>
+        <tr><td class="en">confidenceLevel</td><td class="zh">信心水準</td><td class="def">碳排數據品質：low / medium / high</td><td><span class="tag-pill" style="background:#dcfce7;color:#166534">列舉</span></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ⑤ ESG 報告 -->
+  <section>
+    <div class="sec-hdr" style="background:#ecfdf5; color:#064e3b;">
+      <span class="sec-dot" style="background:#059669"></span>⑤ ESG 報告框架
+    </div>
+    <table>
+      <thead><tr><th>英文 / 代碼</th><th>中文</th><th>說明</th><th>類型</th></tr></thead>
+      <tbody>
+        <tr><td class="en">ESG</td><td class="zh">環境、社會、治理</td><td class="def">Environmental, Social, Governance 永續發展框架</td><td><span class="tag-pill" style="background:#d1fae5;color:#065f46">標準</span></td></tr>
+        <tr><td class="en">GHG Protocol</td><td class="zh">溫室氣體盤查協定</td><td class="def">全球最通用的企業碳排計算標準，本平台依此分 Scope 1/2/3</td><td><span class="tag-pill" style="background:#d1fae5;color:#065f46">標準</span></td></tr>
+        <tr><td class="en">ISO 14064-1</td><td class="zh">組織碳盤查標準</td><td class="def">GHG Protocol 對應的 ISO 標準，報告封面標示使用</td><td><span class="tag-pill" style="background:#d1fae5;color:#065f46">標準</span></td></tr>
+        <tr><td class="en">Scope 1</td><td class="zh">範疇一</td><td class="def">直接排放（燃料燃燒、逸散），本平台標示「不適用」</td><td><span class="tag-pill" style="background:#d1fae5;color:#065f46">範疇</span></td></tr>
+        <tr><td class="en">Scope 2</td><td class="zh">範疇二</td><td class="def">電力間接排放，本平台標示「未追蹤」</td><td><span class="tag-pill" style="background:#d1fae5;color:#065f46">範疇</span></td></tr>
+        <tr><td class="en">Scope 3 Cat.1</td><td class="zh">範疇三類別一</td><td class="def">採購商品與服務：本平台的主要揭露項目（包材 Avoided Emissions）</td><td><span class="tag-pill" style="background:#d1fae5;color:#065f46">範疇</span></td></tr>
+        <tr><td class="en">Scope 3 Cat.4</td><td class="zh">範疇三類別四</td><td class="def">上游運輸與配送，標示「未追蹤」</td><td><span class="tag-pill" style="background:#d1fae5;color:#065f46">範疇</span></td></tr>
+        <tr><td class="en">Scope 3 Cat.5</td><td class="zh">範疇三類別五</td><td class="def">營運廢棄物，標示「未追蹤」</td><td><span class="tag-pill" style="background:#d1fae5;color:#065f46">範疇</span></td></tr>
+        <tr><td class="en">Avoided Emissions</td><td class="zh">避免排放量</td><td class="def">循環容器取代一次性包材所「避免」產生的排放，為補充揭露指標</td><td><span class="tag-pill" style="background:#d1fae5;color:#065f46">概念</span></td></tr>
+        <tr><td class="en">dataHash</td><td class="zh">資料稽核碼</td><td class="def">對原始 BatchRecord 計算的 SHA-256，用於第三方稽核驗真</td><td><span class="tag-pill" style="background:#d1fae5;color:#065f46">欄位</span></td></tr>
+        <tr><td class="en">reportTextZh / En</td><td class="zh">AI 報告文本（中／英）</td><td class="def">由 Claude AI 生成的完整敘事性 ESG 報告段落</td><td><span class="tag-pill" style="background:#d1fae5;color:#065f46">欄位</span></td></tr>
+        <tr><td class="en">isFallback</td><td class="zh">本地備援旗標</td><td class="def">Claude API 無回應時改用本地模板，此旗標為 true 並顯示警示橫幅</td><td><span class="tag-pill" style="background:#d1fae5;color:#065f46">旗標</span></td></tr>
+        <tr><td class="en">totalMeals</td><td class="zh">總訂餐份數</td><td class="def">報告期間內所有已收回批次的容器總數</td><td><span class="tag-pill" style="background:#d1fae5;color:#065f46">指標</span></td></tr>
+        <tr><td class="en">circularMeals</td><td class="zh">循環容器份數</td><td class="def">實際回收的容器總數（summed collected_count）</td><td><span class="tag-pill" style="background:#d1fae5;color:#065f46">指標</span></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ⑥ 供應商審核 -->
+  <section>
+    <div class="sec-hdr" style="background:#fefce8; color:#713f12;">
+      <span class="sec-dot" style="background:#d97706"></span>⑥ 供應商審核狀態
+    </div>
+    <table>
+      <thead><tr><th>英文 / 代碼</th><th>中文</th><th>說明</th><th>類型</th></tr></thead>
+      <tbody>
+        <tr><td class="en">status: pending</td><td class="zh">待審</td><td class="def">申請已送出，平台管理員尚未審核</td><td><span class="tag-pill" style="background:#fef9c3;color:#92400e">狀態值</span></td></tr>
+        <tr><td class="en">status: approved</td><td class="zh">已核准</td><td class="def">管理員核可，廠商可上架加入平台</td><td><span class="tag-pill" style="background:#fef9c3;color:#92400e">狀態值</span></td></tr>
+        <tr><td class="en">status: rejected</td><td class="zh">已拒絕</td><td class="def">管理員拒絕，可附上 reviewNote 說明原因</td><td><span class="tag-pill" style="background:#fef9c3;color:#92400e">狀態值</span></td></tr>
+        <tr><td class="en">verificationStatus</td><td class="zh">ESG 驗證等級</td><td class="def">供應商 ESG 數據的可信度等級（見下方四值）</td><td><span class="tag-pill" style="background:#fef9c3;color:#92400e">欄位</span></td></tr>
+        <tr><td class="en">unverified</td><td class="zh">未驗證</td><td class="def">資料尚未提交或審核</td><td><span class="tag-pill" style="background:#fef9c3;color:#92400e">列舉</span></td></tr>
+        <tr><td class="en">self_declared</td><td class="zh">自我聲明</td><td class="def">廠商自行填報，未經平台或第三方查驗（預設值）</td><td><span class="tag-pill" style="background:#fef9c3;color:#92400e">列舉</span></td></tr>
+        <tr><td class="en">platform_checked</td><td class="zh">平台驗證</td><td class="def">Loopick 平台人員已查核</td><td><span class="tag-pill" style="background:#fef9c3;color:#92400e">列舉</span></td></tr>
+        <tr><td class="en">third_party_verified</td><td class="zh">第三方驗證</td><td class="def">獨立稽核機構（如 BSI、SGS）完成查證</td><td><span class="tag-pill" style="background:#fef9c3;color:#92400e">列舉</span></td></tr>
+        <tr><td class="en">reviewNote</td><td class="zh">審核備註</td><td class="def">管理員核可或拒絕時附加的文字說明</td><td><span class="tag-pill" style="background:#fef9c3;color:#92400e">欄位</span></td></tr>
+        <tr><td class="en">publicProfileEnabled</td><td class="zh">公開展示旗標</td><td class="def">控制廠商 ESG Profile 是否出現在 VendorShowcase 頁面</td><td><span class="tag-pill" style="background:#fef9c3;color:#92400e">旗標</span></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ⑦ 包材類型 -->
+  <section>
+    <div class="sec-hdr" style="background:#fdf4ff; color:#581c87;">
+      <span class="sec-dot" style="background:#9333ea"></span>⑦ 包材類型與材質
+    </div>
+    <table>
+      <thead><tr><th>英文 / 代碼</th><th>中文</th><th>說明</th><th>類型</th></tr></thead>
+      <tbody>
+        <tr><td class="en">itemType: lunch_box</td><td class="zh">午餐盒</td><td class="def">最主要的循環容器類型</td><td><span class="tag-pill" style="background:#f3e8ff;color:#6b21a8">列舉</span></td></tr>
+        <tr><td class="en">itemType: drink_cup</td><td class="zh">飲料杯</td><td class="def">循環飲料容器</td><td><span class="tag-pill" style="background:#f3e8ff;color:#6b21a8">列舉</span></td></tr>
+        <tr><td class="en">itemType: delivery_bag</td><td class="zh">外送袋</td><td class="def">可重複使用的送餐袋</td><td><span class="tag-pill" style="background:#f3e8ff;color:#6b21a8">列舉</span></td></tr>
+        <tr><td class="en">material: pp</td><td class="zh">聚丙烯</td><td class="def">Polypropylene，常見一次性餐盒材料</td><td><span class="tag-pill" style="background:#f3e8ff;color:#6b21a8">材質</span></td></tr>
+        <tr><td class="en">material: pe</td><td class="zh">聚乙烯</td><td class="def">Polyethylene，常見杯蓋材料</td><td><span class="tag-pill" style="background:#f3e8ff;color:#6b21a8">材質</span></td></tr>
+        <tr><td class="en">material: ps</td><td class="zh">聚苯乙烯</td><td class="def">Polystyrene，保麗龍類材料</td><td><span class="tag-pill" style="background:#f3e8ff;color:#6b21a8">材質</span></td></tr>
+        <tr><td class="en">material: stainless_steel</td><td class="zh">不鏽鋼</td><td class="def">高耐久循環容器材質</td><td><span class="tag-pill" style="background:#f3e8ff;color:#6b21a8">材質</span></td></tr>
+        <tr><td class="en">material: canvas</td><td class="zh">帆布</td><td class="def">外送袋主要材質</td><td><span class="tag-pill" style="background:#f3e8ff;color:#6b21a8">材質</span></td></tr>
+        <tr><td class="en">singleUseWeightKg</td><td class="zh">一次性單件重量</td><td class="def">一個一次性包材的重量（kg），用於計算包材減量</td><td><span class="tag-pill" style="background:#f3e8ff;color:#6b21a8">欄位</span></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ⑧ 即時事件 -->
+  <section>
+    <div class="sec-hdr" style="background:#eff6ff; color:#1e3a5f;">
+      <span class="sec-dot" style="background:#6366f1"></span>⑧ WebSocket 即時事件
+    </div>
+    <table>
+      <thead><tr><th>事件名稱</th><th>中文</th><th>Payload 欄位</th><th>觸發時機</th></tr></thead>
+      <tbody>
+        <tr><td class="en">container_dispatched</td><td class="zh">容器已出貨</td><td class="def">batchId, quantity, companyId</td><td class="def">POST /containers/dispatch 成功</td></tr>
+        <tr><td class="en">container_collected</td><td class="zh">容器已回收</td><td class="def">batchId, collectedCount, returnRate</td><td class="def">POST /containers/collect 成功</td></tr>
+        <tr><td class="en">anomaly_alert</td><td class="zh">異常回收率警示</td><td class="def">batchId, returnRate, message</td><td class="def">回收率 &lt; 0.9</td></tr>
+        <tr><td class="en">esg_ready</td><td class="zh">ESG 報告就緒</td><td class="def">reportId</td><td class="def">POST /esg/generate 回傳 reportId</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ⑨ 前端頁面 -->
+  <section>
+    <div class="sec-hdr" style="background:#f0fdf4; color:#14532d;">
+      <span class="sec-dot" style="background:#10b981"></span>⑨ 前端頁面
+    </div>
+    <table>
+      <thead><tr><th>元件名稱</th><th>中文頁面名</th><th>存取角色</th><th>功能摘要</th></tr></thead>
+      <tbody>
+        <tr><td class="en">LoginPage</td><td class="zh">登入頁</td><td class="def">全部</td><td class="def">帳號密碼登入，取得 JWT</td></tr>
+        <tr><td class="en">HRDashboard</td><td class="zh">人資儀表板</td><td class="def">admin / manager</td><td class="def">公司容器統計、回收率趨勢圖</td></tr>
+        <tr><td class="en">EmployeeOrderPage</td><td class="zh">員工訂餐</td><td class="def">employee</td><td class="def">選餐廳、下週訂單、查看本週訂單</td></tr>
+        <tr><td class="en">QRScannerPage</td><td class="zh">QR 掃描回收</td><td class="def">employee</td><td class="def">掃 QR Code 登記容器回收</td></tr>
+        <tr><td class="en">ESGReportPage</td><td class="zh">ESG 報告</td><td class="def">manager / admin</td><td class="def">選期間一鍵生成報告，下載 Excel / JSON</td></tr>
+        <tr><td class="en">ESGBIDashboardPage</td><td class="zh">ESG BI 儀表板</td><td class="def">manager / admin</td><td class="def">互動式圖表，含碳排趨勢與回收率</td></tr>
+        <tr><td class="en">CarbonModelPage</td><td class="zh">碳排生命週期比較</td><td class="def">全部</td><td class="def">互動式選擇包材類型，比較一次性 vs 循環碳排</td></tr>
+        <tr><td class="en">VendorShowcasePage</td><td class="zh">廠商 ESG 展示</td><td class="def">全部</td><td class="def">展示平台認可廠商的永續指標與驗證等級</td></tr>
+        <tr><td class="en">VendorPortalPage</td><td class="zh">廠商入口</td><td class="def">vendor（廠商帳號）</td><td class="def">廠商填寫申請表、更新 ESG Profile</td></tr>
+        <tr><td class="en">VendorApplicationsPage</td><td class="zh">供應商申請管理</td><td class="def">admin</td><td class="def">平台管理員審核廠商申請（核可／拒絕）</td></tr>
+        <tr><td class="en">CompanyAdminPage</td><td class="zh">企業管理</td><td class="def">admin</td><td class="def">管理企業與帳號設定</td></tr>
+        <tr><td class="en">AIAgentPage</td><td class="zh">AI 永續助理</td><td class="def">全部</td><td class="def">對話式 Claude AI，解答 ESG 與循環經濟問題</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ⑩ 縮寫總覽 -->
+  <section>
+    <div class="sec-hdr" style="background:#f8fafc; color:#475569;">
+      <span class="sec-dot" style="background:#64748b"></span>⑩ 縮寫與技術術語
+    </div>
+    <table>
+      <thead><tr><th>縮寫</th><th>全名</th><th>說明</th><th></th></tr></thead>
+      <tbody>
+        <tr><td class="en">ESG</td><td class="zh">Environmental, Social, Governance</td><td class="def">企業永續發展三大面向</td><td></td></tr>
+        <tr><td class="en">GHG</td><td class="zh">Greenhouse Gas</td><td class="def">溫室氣體，對應 GHG Protocol 碳盤查標準</td><td></td></tr>
+        <tr><td class="en">LCA</td><td class="zh">Life Cycle Assessment</td><td class="def">生命週期評估，計算產品從搖籃到墳墓的總環境衝擊</td><td></td></tr>
+        <tr><td class="en">CO₂e</td><td class="zh">Carbon Dioxide Equivalent</td><td class="def">二氧化碳當量，統一表示各溫室氣體的排放量</td><td></td></tr>
+        <tr><td class="en">JWT</td><td class="zh">JSON Web Token</td><td class="def">無狀態身份驗證憑證，HS256 簽名，攜帶 user_id、company_id、role</td><td></td></tr>
+        <tr><td class="en">UUID</td><td class="zh">Universally Unique Identifier</td><td class="def">系統中所有 ID 的格式，如 reportId、batchId</td><td></td></tr>
+        <tr><td class="en">SHA-256</td><td class="zh">Secure Hash Algorithm 256-bit</td><td class="def">用於 dataHash 欄位，確保 ESG 報告資料不可竄改</td><td></td></tr>
+        <tr><td class="en">PP</td><td class="zh">Polypropylene 聚丙烯</td><td class="def">最常見的一次性餐盒材料</td><td></td></tr>
+        <tr><td class="en">QR Code</td><td class="zh">Quick Response Code</td><td class="def">容器批次的唯一掃描標識</td><td></td></tr>
+        <tr><td class="en">API</td><td class="zh">Application Programming Interface</td><td class="def">前後端與中間件之間的通訊介面</td><td></td></tr>
+        <tr><td class="en">WS / WebSocket</td><td class="zh">WebSocket</td><td class="def">全雙工即時通訊協定，用於廣播容器事件與 ESG 就緒通知</td><td></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+</div>
+
+<script>
+// ── Count total rows & init ──
+const allRows = document.querySelectorAll('tbody tr');
+document.getElementById('total').textContent = allRows.length;
+
+// ── Live search ──
+const q = document.getElementById('q');
+const countEl = document.getElementById('count');
+
+q.addEventListener('input', () => {
+  const kw = q.value.trim().toLowerCase();
+  let visible = 0;
+
+  allRows.forEach(tr => {
+    const text = tr.textContent.toLowerCase();
+    const match = !kw || text.includes(kw);
+    tr.classList.toggle('hidden', !match);
+    if (match) visible++;
+  });
+
+  // Hide empty sections
+  document.querySelectorAll('section').forEach(sec => {
+    const hasVisible = [...sec.querySelectorAll('tbody tr')].some(r => !r.classList.contains('hidden'));
+    sec.style.display = hasVisible ? '' : 'none';
+  });
+
+  countEl.textContent = kw ? `${visible} / ${allRows.length} 筆` : '';
+});
+</script>
+</body>
+</html>
