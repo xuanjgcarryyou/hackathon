@@ -18,12 +18,19 @@ async def seed():
         await conn.run_sync(Base.metadata.create_all)
 
     async with AsyncSessionLocal() as db:
+        from sqlalchemy import select
         from app.models.company import Company
         from app.models.vendor import Vendor
         from app.models.restaurant import Restaurant
         from app.models.user import User
         from app.models.order import Order
         from app.models.container_batch import ContainerBatch
+
+        # Skip if already seeded
+        existing = await db.execute(select(Company).where(Company.id == "company-001"))
+        if existing.scalar_one_or_none():
+            print("Seed already run — skipping.")
+            return
 
         # Company
         company_obj = Company(id="company-001", name="台積電示範辦公室", employee_count=500)

@@ -5,6 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
 from app.database import get_db
+from app.deps import get_current_user
 from app.models.container_batch import ContainerBatch
 from app.models.esg_summary import ESGSummary
 from app.services.esg_agent import generate_esg_report
@@ -21,8 +22,8 @@ class ESGRequest(BaseModel):
 
 
 @router.post("/esg/generate")
-async def create_esg_report(body: ESGRequest, db: AsyncSession = Depends(get_db)):
-    company_id = "company-001"  # TODO: 從 JWT 取得
+async def create_esg_report(body: ESGRequest, db: AsyncSession = Depends(get_db), user: dict = Depends(get_current_user)):
+    company_id = user.get("company_id", "company-001")
 
     result = await db.execute(
         select(ContainerBatch).where(

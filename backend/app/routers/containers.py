@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
 
 from app.database import get_db
+from app.deps import get_current_user
 from app.models.container_batch import ContainerBatch
 from app.models.vendor import Vendor
 from app.services.container_calc import calc_co2e_saved
@@ -29,7 +30,7 @@ class CollectRequest(BaseModel):
 
 
 @router.post("/containers/dispatch")
-async def dispatch_containers(body: DispatchRequest, db: AsyncSession = Depends(get_db)):
+async def dispatch_containers(body: DispatchRequest, db: AsyncSession = Depends(get_db), _user: dict = Depends(get_current_user)):
     batch = ContainerBatch(
         id=str(uuid.uuid4()),
         qr_code=body.qrCode,
@@ -44,7 +45,7 @@ async def dispatch_containers(body: DispatchRequest, db: AsyncSession = Depends(
 
 
 @router.post("/containers/collect")
-async def collect_containers(body: CollectRequest, db: AsyncSession = Depends(get_db)):
+async def collect_containers(body: CollectRequest, db: AsyncSession = Depends(get_db), _user: dict = Depends(get_current_user)):
     result = await db.execute(select(ContainerBatch).where(ContainerBatch.id == body.batchId))
     batch = result.scalar_one_or_none()
     if not batch:
@@ -72,8 +73,8 @@ async def collect_containers(body: CollectRequest, db: AsyncSession = Depends(ge
 
 
 @router.get("/containers/stats")
-async def get_stats(period: str = "week", db: AsyncSession = Depends(get_db)):
-    company_id = "company-001"  # TODO: 從 JWT 取得
+async def get_stats(period: str = "week", db: AsyncSession = Depends(get_db), user: dict = Depends(get_current_user)):
+    company_id = user.get("company_id", "company-001")
 
     result = await db.execute(
         select(ContainerBatch).where(ContainerBatch.company_id == company_id)

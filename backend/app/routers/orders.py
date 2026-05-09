@@ -5,6 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
 from app.database import get_db
+from app.deps import get_current_user
 from app.models.order import Order
 from app.models.vendor import Vendor
 
@@ -22,9 +23,8 @@ class WeeklyOrderRequest(BaseModel):
 
 
 @router.post("/orders/weekly")
-async def create_weekly_order(body: WeeklyOrderRequest, db: AsyncSession = Depends(get_db)):
-    # TODO: 從 JWT 中取得 company_id（目前先用 placeholder）
-    company_id = "company-001"
+async def create_weekly_order(body: WeeklyOrderRequest, db: AsyncSession = Depends(get_db), user: dict = Depends(get_current_user)):
+    company_id = user.get("company_id", "company-001")
 
     order = Order(
         id=str(uuid.uuid4()),
