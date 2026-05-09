@@ -10,17 +10,20 @@ export default function ESGReportPage() {
   const [report, setReport] = useState<ESGReport | null>(null)
   const [loading, setLoading] = useState(false)
   const [tab, setTab] = useState<'zh' | 'en'>('zh')
+  const [generatedAt, setGeneratedAt] = useState<string | null>(null)
+  const [genError, setGenError] = useState('')
 
   async function handleGenerate(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
     setReport(null)
+    setGenError('')
     try {
       const { data } = await api.generateESGReport(periodStart, periodEnd)
       setReport(data)
-    } catch (err) {
-      console.error(err)
-      alert('ESG 報表生成失敗，請確認後端連線')
+      setGeneratedAt(new Date().toLocaleString('zh-TW'))
+    } catch {
+      setGenError('ESG 報表生成失敗，請確認後端連線是否正常')
     } finally {
       setLoading(false)
     }
@@ -28,7 +31,7 @@ export default function ESGReportPage() {
 
   function copyReport() {
     const text = tab === 'zh' ? report?.reportTextZh : report?.reportTextEn
-    if (text) navigator.clipboard.writeText(text).then(() => alert('已複製到剪貼簿'))
+    if (text) navigator.clipboard.writeText(text)
   }
 
   return (
@@ -58,8 +61,17 @@ export default function ESGReportPage() {
 
         {loading && <LoadingSpinner text="AI 正在撰寫 ESG 報告（約 10-15 秒）..." />}
 
+        {genError && (
+          <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-600 mb-4">
+            {genError}
+          </div>
+        )}
+
         {report && (
           <div className="bg-white rounded-xl shadow-sm p-6">
+            {generatedAt && (
+              <p className="text-xs text-gray-400 mb-4">🤖 由 Claude AI 生成　·　{generatedAt}</p>
+            )}
             <div className="grid grid-cols-4 gap-3 mb-6">
               {[
                 { label: '總訂餐份數', value: report.totalMeals, unit: '份' },
@@ -67,9 +79,9 @@ export default function ESGReportPage() {
                 { label: '減少包材', value: `${report.reducedPackagingKg.toFixed(1)} kg`, unit: '' },
                 { label: 'CO₂e 減量', value: `${report.co2eSaved.toFixed(1)} kg`, unit: '' },
               ].map(item => (
-                <div key={item.label} className="bg-green-50 rounded-lg p-3 text-center">
-                  <p className="text-xs text-gray-500">{item.label}</p>
-                  <p className="font-bold text-green-700">{item.value}{item.unit}</p>
+                <div key={item.label} className="bg-green-50 rounded-xl p-4 text-center">
+                  <p className="text-xs text-gray-500 mb-1">{item.label}</p>
+                  <p className="text-xl font-bold text-green-700">{item.value}<span className="text-sm font-normal">{item.unit}</span></p>
                 </div>
               ))}
             </div>

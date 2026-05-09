@@ -12,9 +12,13 @@ export default function HRDashboardPage() {
   const navigate = useNavigate()
   const [stats, setStats] = useState<ContainerStats | null>(null)
   const [anomalies, setAnomalies] = useState<string[]>([])
+  const [pendingVendors, setPendingVendors] = useState<number | null>(null)
 
   useEffect(() => {
     api.getContainerStats('week').then(r => setStats(r.data)).catch(console.error)
+    api.getVendorApplications()
+      .then(r => setPendingVendors((r.data as any[]).filter((a: any) => a.status === 'pending').length))
+      .catch(() => setPendingVendors(0))
 
     const unsubCollected = wsClient.on('container_collected', (payload: any) => {
       setStats(prev => prev ? {
@@ -41,7 +45,7 @@ export default function HRDashboardPage() {
           <AnomalyAlert key={i} message={msg} onDismiss={() => setAnomalies(prev => prev.filter((_, j) => j !== i))} />
         ))}
 
-        <div className="grid grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-4 gap-4 mb-6">
           {[
             { label: '已出貨容器', value: stats?.dispatched ?? '--', unit: '個' },
             { label: '已回收容器', value: stats?.collected ?? '--', unit: '個' },
@@ -52,6 +56,17 @@ export default function HRDashboardPage() {
               <p className="text-3xl font-bold text-green-600 mt-1">{card.value}<span className="text-base font-normal ml-1">{card.unit}</span></p>
             </div>
           ))}
+          <button
+            onClick={() => navigate('/vendor-applications')}
+            className="bg-white rounded-xl shadow-sm p-6 text-left hover:shadow-md transition-shadow group"
+          >
+            <p className="text-sm text-gray-500">廠商待審核</p>
+            <p className="text-3xl font-bold text-amber-500 mt-1">
+              {pendingVendors ?? '--'}
+              <span className="text-base font-normal ml-1">件</span>
+            </p>
+            <p className="text-xs text-green-600 mt-2 group-hover:underline">前往審核 →</p>
+          </button>
         </div>
 
         <div className="grid grid-cols-2 gap-6">
