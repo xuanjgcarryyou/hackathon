@@ -1,4 +1,5 @@
 import axios from 'axios'
+import type { VendorApplication } from '../types'
 
 const BASE_URL = import.meta.env.VITE_MIDDLEWARE_URL || ''
 
@@ -33,4 +34,7 @@ export const api = {
 
   generateESGReport: (periodStart: string, periodEnd: string) =>
     apiClient.post('/api/esg/generate', { periodStart, periodEnd }),
+
+  applyVendor: (data: VendorApplication) =>
+    apiClient.post('/api/vendors/apply', data),
 }

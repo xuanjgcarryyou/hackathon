@@ -48,3 +48,15 @@ export interface ESGReport {
   reportTextEn: string
   tables: ESGTable[]
 }
+
+export interface VendorApplication {
+  companyName: string
+  contactEmail: string
+  contactPhone: string
+  businessId: string
+  certifications: string[]
+  containerTypes: string[]
+  carbonFactorPerCycle: number
+  description: string
+  materialFileNames: string[]
+}

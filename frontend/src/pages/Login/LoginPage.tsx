@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { api } from '../../api/client'
 import { wsClient } from '../../api/ws'
 import type { UserRecord } from '../../types'
@@ -74,6 +74,15 @@ export default function LoginPage() {
           <p>hr@demo.com / demo1234 → HR 儀表板</p>
           <p>mgr@demo.com / demo1234 → 管理員</p>
           <p>emp@demo.com / demo1234 → 員工點餐</p>
+        </div>
+
+        <div className="mt-4 text-center">
+          <Link
+            to="/vendor-portal"
+            className="text-sm text-green-600 hover:text-green-800 hover:underline"
+          >
+            🏪 廠商申請加入平台
+          </Link>
         </div>
       </div>
     </div>
