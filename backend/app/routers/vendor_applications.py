@@ -111,3 +111,24 @@ async def review_application(
     await db.commit()
 
     return _serialize(application)
+
+
+@router.delete("/vendors/applications/{application_id}")
+async def delete_application(
+    application_id: str,
+    db: AsyncSession = Depends(get_db),
+    user: dict = Depends(get_current_user),
+):
+    if user.get("role") not in ("admin", "manager"):
+        raise HTTPException(status_code=403, detail={"error": "FORBIDDEN"})
+
+    result = await db.execute(
+        select(VendorApplication).where(VendorApplication.id == application_id)
+    )
+    application = result.scalar_one_or_none()
+    if not application:
+        raise HTTPException(status_code=404, detail={"error": "NOT_FOUND"})
+
+    await db.delete(application)
+    await db.commit()
+    return {"deleted": application_id}

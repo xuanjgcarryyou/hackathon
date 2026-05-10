@@ -53,6 +53,9 @@ export const api = {
   reviewVendorApplication: (id: string, action: 'approve' | 'reject', note?: string) =>
     apiClient.post(`/api/vendors/applications/${id}/review`, { action, note }),
 
+  deleteVendorApplication: (id: string) =>
+    apiClient.delete(`/api/vendors/applications/${id}`),
+
   getPublicVendorESG: () => apiClient.get('/api/vendors/public-esg'),
   getESGCalculationMethods: () => apiClient.get('/api/esg/calculation-methods'),
   getMyContainerStats: () => apiClient.get('/api/containers/my-stats'),

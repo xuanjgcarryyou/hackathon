@@ -47,4 +47,18 @@ router.post('/vendors/applications/:id/review', authGuard, async (req: AuthReque
   }
 })
 
+router.delete('/vendors/applications/:id', authGuard, async (req: AuthRequest, res: Response) => {
+  try {
+    const result = await forwardRequest(
+      'DELETE',
+      `/api/vendors/applications/${req.params.id}`,
+      undefined,
+      { Authorization: req.headers.authorization! }
+    )
+    res.json(result)
+  } catch (err: any) {
+    res.status(err.response?.status || 500).json(err.response?.data || { error: 'DELETE_FAILED' })
+  }
+})
+
 export default router

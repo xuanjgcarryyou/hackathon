@@ -99,6 +99,7 @@ export default function VendorApplicationsPage() {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all')
   const [certFilter, setCertFilter] = useState<string>('all')
   const [reviewingId, setReviewingId] = useState<string | null>(null)
+  const [deletingId, setDeletingId] = useState<string | null>(null)
   const [noteMap, setNoteMap] = useState<Record<string, string>>({})
   const [expandedId, setExpandedId] = useState<string | null>(null)
 
@@ -129,6 +130,17 @@ export default function VendorApplicationsPage() {
       return true
     })
   }, [applications, statusFilter, certFilter, search])
+
+  async function handleDelete(id: string, companyName: string) {
+    if (!window.confirm(`確定要刪除「${companyName}」的申請紀錄嗎？此動作無法復原。`)) return
+    setDeletingId(id)
+    try {
+      await api.deleteVendorApplication(id)
+    } catch { /* optimistic */ }
+    setApplications(prev => prev.filter(a => a.id !== id))
+    setDeletingId(null)
+    setExpandedId(null)
+  }
 
   async function handleReview(id: string, action: 'approve' | 'reject') {
     setReviewingId(id)
@@ -273,6 +285,20 @@ export default function VendorApplicationsPage() {
                         <span className="text-xs text-gray-400">
                           {new Date(app.submittedAt).toLocaleDateString('zh-TW')}
                         </span>
+                        <button
+                          onClick={e => { e.stopPropagation(); handleDelete(app.id, app.companyName) }}
+                          disabled={deletingId === app.id}
+                          title="刪除此申請"
+                          className="p-1.5 rounded-lg text-gray-300 hover:text-red-500 hover:bg-red-50 disabled:opacity-40 transition-colors"
+                        >
+                          {deletingId === app.id ? (
+                            <span className="text-xs text-gray-400">刪除中</span>
+                          ) : (
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                            </svg>
+                          )}
+                        </button>
                         <span className={`text-gray-400 transition-transform ${isExpanded ? 'rotate-180' : ''}`}>▾</span>
                       </div>
                     </div>
